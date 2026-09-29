@@ -1,0 +1,74 @@
+filters:
+  and:
+    - file.inFolder("Library/wiki")
+formulas:
+  days_since_ingest: if(note["last-ingest"], (today() - date(note["last-ingest"])).days, "")
+  lines: file.size
+properties:
+  file.name:
+    displayName: Page
+  note.kind:
+    displayName: Kind
+  note.status:
+    displayName: Status
+  note["source-count"]:
+    displayName: Source count
+  note.id:
+    displayName: ID
+  note.sources:
+    displayName: Sources (our pages)
+  note.originals:
+    displayName: Originals (vault file)
+  formula.days_since_ingest:
+    displayName: Days since ingest
+views:
+  - type: table
+    name: Everything
+    order:
+      - file.name
+      - kind
+      - status
+      - source-count
+      - formula.days_since_ingest
+    sort:
+      - property: kind
+        direction: ASC
+      - property: file.name
+        direction: ASC
+  - type: table
+    name: By kind
+    groupBy:
+      property: kind
+      direction: ASC
+    order:
+      - file.name
+      - status
+      - source-count
+  - type: table
+    name: Needs attention
+    filters:
+      or:
+        - status == "stale"
+        - status == "disputed"
+        - status == "draft"
+        - source-count <= 1
+    order:
+      - status
+      - file.name
+      - source-count
+      - formula.days_since_ingest
+    sort:
+      - property: status
+        direction: ASC
+  - type: table
+    name: Concepts
+    filters:
+      and:
+        - kind == "concept"
+    order:
+      - file.name
+      - source-count
+      - status
+    sort:
+      - property: source-count
+        direction: DESC

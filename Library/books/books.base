@@ -1,0 +1,57 @@
+filters:
+  and:
+    - file.inFolder("Library/books")
+    - file.hasTag("book")
+formulas:
+  days_ago: if(date, (today() - date(date)).days, "")
+properties:
+  file.name:
+    displayName: Takeaway
+  note.book:
+    displayName: Book
+  note.date:
+    displayName: Date
+  note.pages:
+    displayName: Pages
+  note.minutes:
+    displayName: Min
+  formula.days_ago:
+    displayName: Days ago
+views:
+  - type: table
+    name: All takeaways
+    order:
+      - file.name
+      - book
+      - date
+      - pages
+      - formula.days_ago
+    sort:
+      - property: formula.days_ago
+        direction: ASC
+    summaries:
+      minutes: Sum
+    columnSize:
+      note.pages: 152
+  - type: table
+    name: By book
+    groupBy:
+      property: book
+      direction: ASC
+    order:
+      - file.name
+      - date
+      - pages
+    summaries:
+      minutes: Sum
+  - type: table
+    name: Last 14 days
+    filters:
+      and:
+        - date(date) >= today() - "14d"
+    order:
+      - date
+      - file.name
+      - book
+      - pages
+    limit: 40
