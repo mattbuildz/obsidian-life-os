@@ -1,0 +1,15 @@
+# Every text file is stored AND checked out with LF, on every OS.
+# Without this, Git for Windows (autocrlf=true by default) checks files out
+# with CRLF: bash scripts die with `$'\r': command not found`, and anything
+# that splits a note on "\n" keeps a stray "\r" at the end of each line.
+* text=auto eol=lf
+
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.pdf binary
+*.ttf binary
+*.woff binary
+*.woff2 binary
