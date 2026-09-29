@@ -1,0 +1,196 @@
+/* =========================================================================
+   life-os-look — the vault's look on top of the Border theme.
+   Pairs with Style Settings (accent colours, background gradient) and
+   border-fonts.css (IM Fell English). Works in light and dark mode.
+   ========================================================================= */
+
+
+/* -------------------------------------------------------------------------
+   File explorer: roomier rows, tighter indent
+   5px of vertical padding is the floor: drag-and-drop "into this folder"
+   needs some row height above and below the cursor, and tiny rows make
+   dropping into folders fail. Files and folders share one value so the
+   tree keeps an even rhythm.
+   ------------------------------------------------------------------------- */
+
+.nav-files-container .tree-item-self.nav-folder-title,
+.nav-files-container .tree-item-self.nav-file-title {
+    padding-block: 5px !important;
+    font-size: 15px !important;
+}
+
+.nav-files-container .tree-item-inner {
+    padding-inline-start: 5px !important;
+}
+
+.nav-files-container .tree-item-children {
+    padding-inline-start: 10px !important;
+}
+
+
+/* -------------------------------------------------------------------------
+   Right sidebar: tab headers fold away until you point at them
+   The top-right tab group is left alone — on Windows and Linux the window
+   buttons live in that strip, and hiding them would hide minimise/close.
+   ------------------------------------------------------------------------- */
+
+.mod-right-split .workspace-tabs:not(.mod-top-right-space) > .workspace-tab-header-container {
+    transition: max-height 180ms ease, opacity 180ms ease;
+    max-height: var(--header-height);
+}
+
+.mod-right-split .workspace-tabs:not(.mod-top-right-space):not(:hover) > .workspace-tab-header-container {
+    max-height: 12px;
+    opacity: 0;
+    overflow: hidden;
+}
+
+
+/* -------------------------------------------------------------------------
+   Hover trail
+   Border derives the hover colour from the accent hue but drops saturation
+   to 6%, which reads as plain grey. Override the variable itself, not the
+   :hover rules: it drives hover everywhere (explorer, outline, menus,
+   buttons), so one change gives one consistent effect.
+   The colour follows the accent set in Style Settings, per mode. Lightness
+   differs by mode because on white the highlight has to be darker than the
+   background to show at all.
+   ------------------------------------------------------------------------- */
+
+body.theme-dark {
+    --background-modifier-hover: hsla(var(--accent-h), calc(var(--accent-s) * 1.2), 60%, 0.20) !important;
+}
+
+body.theme-light {
+    --background-modifier-hover: hsla(var(--accent-h), calc(var(--accent-s) * 1.2), 45%, 0.16) !important;
+}
+
+/* Instant in, slow out: sweeping the cursor down a list leaves a fading
+   trail instead of one jumping rectangle. */
+.tree-item-self {
+    border-radius: 6px;
+    transition: background-color 520ms ease-out;
+}
+
+.tree-item-self:hover {
+    transition-duration: 40ms;
+}
+
+
+/* -------------------------------------------------------------------------
+   Status bar: hidden
+   Only the look is hidden; the Backlinks panel and the graph keep working.
+   Want the word count back? Delete this rule.
+   ------------------------------------------------------------------------- */
+
+.status-bar {
+    display: none !important;
+}
+
+
+/* -------------------------------------------------------------------------
+   Life OS Hub: no sideways scroll
+   The banner and header deliberately bleed past the content edge. The same
+   rule in the plugin's styles.css loses to the theme's more specific
+   .workspace-leaf-content .view-content, so it's repeated here, stronger.
+   ------------------------------------------------------------------------- */
+
+.workspace-leaf-content[data-type="life-os-hub"] .view-content,
+.workspace-leaf-content .cc-view {
+    overflow-x: hidden !important;
+}
+
+
+/* -------------------------------------------------------------------------
+   Glass tokens, derived from the current palette.
+   Prefix --lo- on purpose: the Life OS Hub plugin reads --ja-* variables
+   as fallbacks, and defining those here would repaint it by accident.
+   ------------------------------------------------------------------------- */
+
+body.theme-dark {
+    --lo-glass: rgba(20, 20, 42, 0.30);
+    --lo-glass-edge: rgba(255, 255, 255, 0.08);
+    --lo-glass-shadow: rgba(0, 0, 0, 0.38);
+    --lo-warm: #E6A85C;
+}
+
+body.theme-light {
+    --lo-glass: rgba(255, 255, 255, 0.50);
+    --lo-glass-edge: rgba(255, 255, 255, 0.60);
+    --lo-glass-shadow: rgba(23, 32, 51, 0.10);
+    --lo-warm: #C4644E;
+}
+
+
+/* -------------------------------------------------------------------------
+   Callouts as frosted cards, tinted by their own type colour
+   ------------------------------------------------------------------------- */
+
+.callout {
+    --lo-tint: rgb(var(--callout-color));
+    background:
+        linear-gradient(color-mix(in srgb, var(--lo-tint) 8%, transparent),
+                        color-mix(in srgb, var(--lo-tint) 8%, transparent)),
+        var(--lo-glass);
+    border: 1px solid color-mix(in srgb, var(--lo-tint) 20%, transparent);
+    border-radius: 10px;
+    box-shadow: inset 0 0 0 1px var(--lo-glass-edge), 0 10px 24px var(--lo-glass-shadow);
+    backdrop-filter: blur(18px) saturate(150%);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    overflow: hidden;
+}
+
+/* Type colours, separate per mode: --callout-color also colours the title,
+   and a mint that reads on navy disappears on white. */
+.theme-dark .callout[data-callout="quote"]     { --callout-color: 176, 124, 84; }
+.theme-dark .callout[data-callout="note"]      { --callout-color: 168, 216, 180; }
+.theme-dark .callout[data-callout="tip"]       { --callout-color: 122, 158, 172; }
+.theme-dark .callout[data-callout="important"],
+.theme-dark .callout[data-callout="warning"]   { --callout-color: 230, 168, 92; }
+
+.theme-light .callout[data-callout="quote"]    { --callout-color: 138, 96, 62; }
+.theme-light .callout[data-callout="note"]     { --callout-color: 74, 124, 96; }
+.theme-light .callout[data-callout="tip"]      { --callout-color: 92, 127, 145; }
+.theme-light .callout[data-callout="important"],
+.theme-light .callout[data-callout="warning"]  { --callout-color: 168, 110, 40; }
+
+
+/* -------------------------------------------------------------------------
+   Tables (Dataview included): theme variables instead of fixed colours,
+   so they follow the accent. Row hover reuses the explorer's hover colour.
+   ------------------------------------------------------------------------- */
+
+.markdown-rendered table,
+.markdown-rendered th,
+.markdown-rendered td {
+    border-color: var(--background-modifier-border) !important;
+}
+
+.markdown-rendered thead th {
+    color: var(--lo-warm);
+    background: color-mix(in srgb, var(--color-accent) 10%, transparent);
+}
+
+.markdown-rendered tbody tr:hover {
+    background: var(--background-modifier-hover);
+}
+
+/* -------------------------------------------------------------------------
+   Ribbon: hide icons that don't earn their spot once the ribbon is visible.
+   - "Open homepage" (Homepage plugin): only runs life-os-hub:open anyway
+     (see .obsidian/plugins/homepage/data.json) — Life OS Hub already has
+     its own ribbon icon for that. Homepage stays enabled for its real job:
+     auto-opening the Hub on startup / on an empty new tab.
+   - "Create new base" (Obsidian core Bases): unused in this vault.
+   - "Manage workspace layouts" (Obsidian core Workspaces): unused.
+   - "Insert template" (Obsidian core Templates): unused from the ribbon —
+     /morning, /evening etc. insert their own templates through QuickAdd,
+     not this button. Still reachable via the command palette if ever needed.
+   Add more aria-label selectors here if other icons turn out to be noise.
+   ------------------------------------------------------------------------- */
+.side-dock-ribbon-action[aria-label="Open homepage"],
+.side-dock-ribbon-action[aria-label="Create new base"],
+.side-dock-ribbon-action[aria-label="Manage workspace layouts"],
+.side-dock-ribbon-action[aria-label="Insert template"] {
+    display: none;
+}

@@ -1,0 +1,9 @@
+{
+  "id": "life-os-hub",
+  "name": "Life OS Hub",
+  "version": "0.1.0",
+  "minAppVersion": "1.4.0",
+  "description": "Personal dashboard: day schedule, focus timer, weekly metrics, inbox with quick add, vault status and script runner.",
+  "author": "mattbuildz",
+  "isDesktopOnly": false
+}

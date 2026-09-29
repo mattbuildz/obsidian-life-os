@@ -1,0 +1,945 @@
+/* @settings
+
+name: Life OS Hub
+id: life-os-hub
+settings:
+    -
+        id: cc-settings-header
+        title: Life OS Hub — colors
+        type: heading
+        level: 1
+        collapsed: false
+    -
+        id: cc-accent
+        title: Accent (jade)
+        type: variable-themed-color
+        format: hex
+        opacity: false
+        default-light: '#3E6B63'
+        default-dark: '#8FBFB4'
+    -
+        id: cc-accent-dark
+        title: Accent — darker variant
+        type: variable-themed-color
+        format: hex
+        opacity: false
+        default-light: '#2F5A52'
+        default-dark: '#6B948F'
+    -
+        id: cc-card
+        title: Card/row background (dark mode)
+        description: In light mode, cards take their color straight from the active theme.
+        type: variable-color
+        format: hex
+        opacity: false
+        default: '#0A1614'
+    -
+        id: cc-border
+        title: Border (dark mode)
+        type: variable-color
+        format: hex
+        opacity: false
+        default: '#2C4541'
+    -
+        id: cc-sub
+        title: Secondary text (dark mode)
+        type: variable-color
+        format: hex
+        opacity: false
+        default: '#7F918F'
+    -
+        id: cc-banner-settings-header
+        title: Life OS Hub — banner
+        description: Only matters once you've dropped in your own "dark mode"/"light mode" image (see README). The position sliders recenter the crop — your photo's own aspect ratio is handled automatically either way.
+        type: heading
+        level: 1
+        collapsed: false
+    -
+        id: cc-banner-pos-x-dark
+        title: Dark banner — horizontal position
+        description: 0 = left edge of the image, 100 = right edge.
+        type: variable-number-slider
+        min: 0
+        max: 100
+        step: 1
+        default: 50
+    -
+        id: cc-banner-pos-y-dark
+        title: Dark banner — vertical position
+        description: 0 = top of the image, 100 = bottom.
+        type: variable-number-slider
+        min: 0
+        max: 100
+        step: 1
+        default: 82
+    -
+        id: cc-banner-pos-x-light
+        title: Light banner — horizontal position
+        type: variable-number-slider
+        min: 0
+        max: 100
+        step: 1
+        default: 50
+    -
+        id: cc-banner-pos-y-light
+        title: Light banner — vertical position
+        type: variable-number-slider
+        min: 0
+        max: 100
+        step: 1
+        default: 50
+
+*/
+
+.cc-view {
+  --g: var(--cc-accent, #8FBFB4);
+  --gd: var(--cc-accent-dark, #6B948F);
+  /* --g as RGB: lets us do transparency without duplicating the color.
+     --cc-accent-rgb only exists while the Colors tab overrides the accent. */
+  --g-rgb: var(--cc-accent-rgb, 143, 191, 180);
+  --amber: var(--ja-amber, #E6A85C);
+  /* Color coding in the "important" panel: red = today, amber = coming up,
+     blue = unconfirmed. Values here are dark mode; light mode overrides
+     below, because these light shades are practically invisible on white glass. */
+  --imp-red: #ef4444;
+  --imp-red-rgb: 239, 68, 68;
+  --imp-soon: #f59e0b;
+  --imp-soon-rgb: 245, 158, 11;
+  --imp-when: #fbbf24;
+  --imp-info: #60a5fa;
+  --imp-info-rgb: 59, 130, 246;
+  --bg: transparent;
+  /* Light mode: generic, taken from the active theme. Dark mode: Life OS Hub's signature look. */
+  --card: var(--ja-glass, var(--background-secondary));
+  --bd: var(--background-modifier-border);
+  --sub: var(--text-muted);
+  /* Two hero dials.
+     --cc-banner-ratio: a smaller second number = a taller banner = more image.
+     --cc-body-top: where the content starts, as a % of the panel's width.
+       Smaller = content starts higher, riding further onto the image. */
+  --cc-banner-ratio: 16 / 9;
+  --cc-body-top: 38%;
+  background: var(--bg) !important;
+  padding: 0 10px 20px;
+  overflow-y: auto;
+  /* MUST be explicit. With just `overflow-y: auto`, the browser also computes
+     overflow-x as `auto`, and the banner (`inset-inline: -10px`) and header
+     (`margin: 0 -10px`) deliberately extend 10px past the content on each
+     side to reach the panel's edge. The result was a horizontal scrollbar:
+     a touchpad could shift the view sideways. */
+  overflow-x: hidden;
+  position: relative;
+}
+
+body.theme-dark .cc-view {
+  --card: var(--ja-glass, var(--cc-card, #0d0d0d));
+  --bd: var(--ja-glass-border, var(--cc-border, #1f3a26));
+  --sub: var(--cc-sub, #7c8a80);
+}
+
+body.theme-light .cc-view {
+  /* Accent tuned to the light artwork's palette: the slate-teal of the city
+     and the bird (#5C7F91), not jade. Amber shifts toward the sun's coral —
+     #E6A85C on white had too little contrast to signal anything. */
+  --g: var(--cc-accent-override, #5C7F91);
+  --gd: var(--cc-accent-dark-override, #47677A);
+  --g-rgb: var(--cc-accent-rgb, 92, 127, 145);
+  --amber: #C4644E;
+  --card: var(--ja-glass, var(--background-secondary));
+  --bd: var(--ja-glass-border, var(--background-modifier-border));
+  /* Same alphabet of meaning, just darkened instead of brightened: the same
+     hues (red → coral, amber → burnt earth, blue → slate), but dark enough
+     to read on light glass over light artwork. All ≥ 4.5:1 on #EEF0F5. */
+  --imp-red: #C0392B;
+  --imp-red-rgb: 192, 57, 43;
+  --imp-soon: #9C4F2A;
+  --imp-soon-rgb: 156, 79, 42;
+  --imp-when: #9E5A33;
+  --imp-info: #2F6E8F;
+  --imp-info-rgb: 47, 110, 143;
+}
+
+/* Glass cards — shared look for everything with a --card background */
+.cc-cockpit > div,
+.cc-row, .cc-metric, .cc-bars, .cc-todo-row,
+.cc-irow, .cc-ev, .cc-tab, .cc-chipbtn, .cc-input {
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+
+/* Banner — a dropped-in image, animated (GIF) or not; see findBanner in
+   main.js. Not in normal document flow: it's a background layer for the
+   whole view, with content scrolling over it. That keeps the image fully
+   visible up top while content can ride onto it. */
+.cc-banner {
+  position: absolute;
+  top: 0;
+  inset-inline: -10px;   /* -10px to break out of .cc-view's padding to full width */
+  aspect-ratio: var(--cc-banner-ratio);
+  z-index: 0;
+  /* Backdrop UNDER the GIF. GIF encoders inject a transparency index even
+     into opaque frames, so on loop, the theme's background showed through
+     the gaps — a flash on every loop. Needs to roughly match the art's own
+     dominant tone, or the flash comes back; --cc-banner-backdrop-dark is
+     sampled live from whatever image is actually loaded (see
+     applyBannerBackdrop in main.js), so this doesn't need hand-editing on
+     every swap — the hex here is only the fallback before that resolves.
+     The fade mask applies to the whole element, so the backdrop fades out
+     together with the image. */
+  background-color: var(--cc-banner-backdrop-dark, #111122);
+  background-image: var(--cc-banner-img-dark);
+  background-size: cover;
+  /* `cover` crops to fill regardless of the source image's own dimensions —
+     any photo works, no manual resizing needed. Position is tunable from
+     Style Settings (defaults keep the previous framing) so a differently
+     composed drop-in image can be recentered without touching CSS. */
+  background-position: calc(var(--cc-banner-pos-x-dark, 50) * 1%) calc(var(--cc-banner-pos-y-dark, 82) * 1%);
+  /* Pixel art: without this, a 2–3× scale-up would blur the pixels to mush */
+  image-rendering: pixelated;
+  overflow: hidden;
+  pointer-events: none;  /* must not intercept clicks on the content sitting on top of it */
+  will-change: opacity;
+  /* The bottom edge fades to TRANSPARENT, not to a color — the theme's
+     gradient should show through underneath it. It used to fade to a fixed
+     #0d211b (a leftover variable from a disabled snippet) that doesn't exist
+     anywhere else on screen, producing a hard-edged rectangle. The light,
+     halftone-textured ground at the bottom of the art just drowned in it. */
+  -webkit-mask-image: linear-gradient(180deg, #000 0%, #000 72%, transparent 100%);
+  mask-image: linear-gradient(180deg, #000 0%, #000 72%, transparent 100%);
+}
+
+/* Empty state (no banner image found for either mode): a visible drop
+   target instead of a plain unexplained dark/light rectangle. */
+.cc-banner-empty {
+  border: 2px dashed var(--bd);
+}
+.cc-banner-hint {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 12px;
+  font-size: 0.85em;
+  color: var(--sub);
+}
+
+/* Drag highlight — shown whether the banner is empty or already has a
+   picture (dropping a new one replaces it either way). `outline` rather
+   than `border`/background so it doesn't shift a banner that already has
+   content, the way changing `.cc-banner-empty`'s border would. Detection is
+   coordinate-based (see _draggingOverBanner in main.js), not a real drop
+   event on this element — it's routinely pointer-events: none, see above. */
+.cc-banner.cc-banner-dragover {
+  outline: 2px dashed var(--g);
+  outline-offset: -2px;
+}
+.cc-banner-empty.cc-banner-dragover {
+  background-color: color-mix(in srgb, var(--g) 14%, transparent);
+}
+
+/* Light mode uses the same proportions as dark (the :root defaults above) so
+   switching themes doesn't shift the layout. `cover` crops whatever image you
+   drop in to fill the ratio, regardless of its own dimensions. */
+body.theme-light .cc-banner {
+  background-image: var(--cc-banner-img-light);
+  background-color: var(--cc-banner-backdrop-light, #EEF0F5);   /* sampled live too, see the dark-mode comment above */
+  background-position: calc(var(--cc-banner-pos-x-light, 50) * 1%) calc(var(--cc-banner-pos-y-light, 50) * 1%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cc-view { --cc-banner-ratio: 21 / 9; --cc-body-top: 22%; }
+}
+
+/* Content sits ABOVE the banner and starts far enough down to ride onto its
+   lower part. margin-top in % is computed from the PANEL'S WIDTH — same as
+   the banner's height via aspect-ratio, so the two scale together. */
+.cc-body {
+  position: relative;
+  z-index: 1;
+  margin-top: var(--cc-body-top);
+}
+/* Tabs other than Overview: content starts at the top and simply sits on the
+   banner, which becomes pure background. Without this you'd have to scroll
+   past the whole banner before reaching the task list. */
+.cc-view.cc-tab-plain .cc-body { margin-top: 16px; }
+/* Since content sits directly on the artwork, panels get a matte backing —
+   the same trick as .cc-important. The banner still shows through, but
+   section headings don't disappear over bright parts of the image. */
+.cc-view.cc-tab-plain .cc-panel {
+  background: color-mix(in srgb, var(--ja-bg-2, #14142A) 62%, transparent);
+  backdrop-filter: blur(16px) saturate(130%);
+  -webkit-backdrop-filter: blur(16px) saturate(130%);
+}
+body.theme-light .cc-view.cc-tab-plain .cc-panel {
+  background: color-mix(in srgb, var(--ja-bg-2, #EDEFF5) 72%, transparent);
+  backdrop-filter: blur(12px) saturate(120%);
+  -webkit-backdrop-filter: blur(12px) saturate(120%);
+}
+/* the "new task" field and filter chips also sit on the artwork */
+.cc-view.cc-tab-plain .cc-input { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.cc-view.cc-tab-plain .cc-chipbtn { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+/* some themes style .view-content with a stronger selector (workspace-leaf-content .view-content) —
+   that beats our single class even though the snippet loads later, hence !important here and above */
+.workspace-leaf-content .cc-view,
+.workspace-leaf-content[data-type="life-os-hub"] .view-content {
+  background: var(--bg) !important;
+}
+
+/* Header */
+/* The header sits on the banner: glass, not a solid plate — otherwise it
+   would cover the image. It is NOT sticky — it should stay at the top of the
+   document and scroll away with the content. z-index stays, because it must
+   sit above the absolutely-positioned banner. */
+.cc-head { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 8px; padding: 8px 10px; margin: 0 -10px; position: relative; z-index: 5;
+  background: color-mix(in srgb, var(--ja-bg-2, #14142A) 28%, transparent) !important;
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  border-bottom: 0; }
+
+body.theme-light .cc-head {
+  background: color-mix(in srgb, var(--ja-bg-2, #EDEFF5) 40%, transparent) !important; }
+
+.cc-clock { color: var(--amber); font-weight: 700; font-variant-numeric: tabular-nums; letter-spacing: 0.3px; }
+.cc-tabs { display: flex; flex-wrap: wrap; gap: 4px; }
+.cc-tab { background: var(--card); border: 1px solid var(--bd); color: var(--sub); border-radius: 8px; padding: 5px 14px; cursor: pointer; font-weight: 600; }
+.cc-tab.active { border-color: var(--g); color: var(--g); }
+.cc-tab:hover { color: var(--g); }
+.cc-refresh { padding: 5px 10px; }
+
+/* Banner: important: true events.
+   The panel is glassy and neutral, since it sits on the GIF. Urgency is
+   carried by the label and row color (red = today, amber = coming up), not a
+   red frame around the whole thing — that used to eat half the screen and
+   shout over the artwork. */
+/* Nearly invisible at rest, so it doesn't cover the GIF — legibility comes
+   from text-shadow, not from a background. It thickens under the cursor,
+   which is when it actually gets read. */
+.cc-important {
+  max-width: 660px;
+  margin: 2px auto 14px;
+  font-size: 0.9em;
+  background: color-mix(in srgb, var(--ja-bg-2, #14142A) 14%, transparent);
+  backdrop-filter: blur(4px) saturate(120%);
+  -webkit-backdrop-filter: blur(4px) saturate(120%);
+  border: 1px solid rgba(var(--g-rgb), 0.18);
+  border-radius: 16px;
+  padding: 8px 14px 10px;
+  text-shadow: 0 1px 3px rgba(0,0,0,0.75);
+  transition: background 180ms ease, border-color 180ms ease, box-shadow 180ms ease,
+              backdrop-filter 180ms ease, -webkit-backdrop-filter 180ms ease;
+}
+.cc-important:hover {
+  background: color-mix(in srgb, var(--ja-bg-2, #14142A) 88%, transparent);
+  backdrop-filter: blur(28px) saturate(150%);
+  -webkit-backdrop-filter: blur(28px) saturate(150%);
+  border-color: rgba(var(--g-rgb), 0.45);
+  box-shadow: 0 18px 50px rgba(0,0,0,0.5);
+  text-shadow: none;
+}
+body.theme-light .cc-important {
+  /* A denser plate than dark mode, and ZERO glow under the text. A blurred
+     white text-shadow worked while the text was light — it blended in. With
+     dark letters, the same halo outlines every character and turns the text
+     to mush. Legibility here comes from the background, not an outline. */
+  background: color-mix(in srgb, var(--ja-bg-2, #EDEFF5) 46%, transparent);
+  backdrop-filter: blur(10px) saturate(120%);
+  -webkit-backdrop-filter: blur(10px) saturate(120%);
+  text-shadow: none;
+}
+body.theme-light .cc-important:hover {
+  background: color-mix(in srgb, var(--ja-bg-2, #EDEFF5) 92%, transparent);
+  box-shadow: 0 14px 40px rgba(0,0,0,0.14);
+}
+.cc-important-label { color: var(--imp-red); font-size: 0.75em; letter-spacing: 2px; text-transform: uppercase; font-weight: 800; margin-bottom: 4px; text-align: center; }
+/* Rows without their own cards — a list, not a stack of boxes. Fits 7 entries in the space 4 used to take. */
+.cc-important-list { display: flex; flex-direction: column; gap: 0; }
+.cc-important-row { display: flex; align-items: center; justify-content: space-between; gap: 10px; background: transparent; border: 0; border-radius: 7px; padding: 3px 8px; cursor: pointer; }
+.cc-important-row:hover { background: rgba(var(--g-rgb), 0.12); }
+.cc-important-row.done { opacity: 0.5; text-decoration: line-through; }
+/* unconfirmed events (the .unconfirmed class from importantRow) — blue, so they don't blend in with fixed deadlines */
+.cc-important-row.unconfirmed,
+.cc-important-label.soon ~ .cc-important-list .cc-important-row.unconfirmed { background: rgba(var(--imp-info-rgb), 0.10); }
+.cc-important-row.unconfirmed:hover,
+.cc-important-label.soon ~ .cc-important-list .cc-important-row.unconfirmed:hover { background: rgba(var(--imp-info-rgb), 0.20); }
+.cc-important-row.unconfirmed .cc-important-title,
+.cc-important-label.soon ~ .cc-important-list .cc-important-row.unconfirmed .cc-important-title { color: var(--imp-info); font-weight: 600; }
+.cc-important-row.unconfirmed .cc-important-when { color: var(--imp-info); }
+.cc-important-title { font-weight: 700; flex: 1; }
+/* Dates and times: tabular-nums keeps digits in even columns so the list
+   doesn't jitter horizontally. Font size bumped up because 0.78em got lost against the moving background. */
+.cc-important-time { color: var(--sub); font-size: 0.86em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cc-important-when { color: var(--imp-when); font-size: 0.86em; font-weight: 700; white-space: nowrap; min-width: 86px; font-variant-numeric: tabular-nums; }
+/* "coming up" section — a heads-up, not an alarm: calmer than the today section */
+.cc-important-label.soon { color: var(--imp-soon); margin-top: 8px; font-size: 0.88em; font-weight: 900; }
+.cc-important-label.soon ~ .cc-important-list .cc-important-row:hover { background: rgba(var(--imp-soon-rgb), 0.14); }
+.cc-important-label.soon ~ .cc-important-list .cc-important-title { font-weight: 600; }
+/* ⭐ tasks tagged #top (INBOX) in the same banner as blocks from Calendar/.
+   Amber instead of red — this isn't a calendar entry yet, just a task
+   waiting on /evening. Overdue reverts to red, since the deadline has already passed. */
+.cc-important-label.tasks { color: var(--imp-red); margin-top: 8px; }
+.cc-important-row.task .cc-important-when { color: var(--amber); }
+.cc-important-row.task:hover { background: color-mix(in srgb, var(--amber) 14%, transparent); }
+.cc-important-row.task .cc-important-title { font-weight: 600; }
+.cc-important-row.task.overdue .cc-important-when { color: var(--imp-red); }
+.cc-important-more { color: var(--sub); font-size: 0.78em; margin-top: 6px; cursor: pointer; text-decoration: underline dotted; }
+.cc-important-more:hover { color: var(--imp-soon); }
+
+/* Project filter bar */
+.cc-filterbar { display: flex; gap: 6px; flex-wrap: wrap; margin: 2px 0 10px; }
+.cc-chipbtn { background: var(--card); border: 1px solid var(--bd); color: var(--sub); border-radius: 999px; padding: 5px 14px; cursor: pointer; font-weight: 600; font-size: 0.85em; }
+.cc-chipbtn.active { border-color: var(--g); color: var(--g); background: rgba(var(--g-rgb),0.1); }
+.cc-chipbtn:hover { color: var(--g); }
+
+/* Cockpit */
+.cc-cockpit { display: flex; gap: 12px; flex-wrap: wrap; margin: 6px 0 14px; }
+.cc-cockpit > div { background: linear-gradient(180deg, rgba(var(--g-rgb),0.05), rgba(0,0,0,0)); border: 1px solid var(--bd); border-radius: 16px; padding: 14px 18px; }
+.cc-focus { flex: 2; min-width: 220px; border-color: var(--g) !important; box-shadow: 0 0 0 1px var(--g) inset; }
+.cc-focus-label { color: var(--g); font-size: 0.72em; letter-spacing: 2px; text-transform: uppercase; font-weight: 700; }
+.cc-focus-title { font-size: 1.35em; font-weight: 700; margin: 4px 0; }
+.cc-focus-time { color: var(--gd); font-weight: 600; }
+
+/* Timer */
+.cc-timer { flex: 1; min-width: 150px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; }
+.cc-timer-disp { font-size: 2.2em; font-weight: 800; color: var(--g); font-variant-numeric: tabular-nums; }
+.cc-timer-btns { display: flex; gap: 5px; }
+.cc-timer-label { color: var(--sub); font-size: 0.68em; letter-spacing: 2px; }
+
+/* Ring */
+.cc-ring { flex: 1; min-width: 140px; display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.cc-ring-cap { color: var(--sub); font-size: 0.8em; }
+.cc-ring-cap b { color: var(--text-normal); }
+
+/* Buttons */
+.cc-b { background: var(--card); border: 1px solid var(--bd); color: var(--text-normal); border-radius: 8px; padding: 4px 10px; cursor: pointer; font-weight: 600; }
+.cc-b:hover { border-color: var(--g); color: var(--g); }
+.cc-b.primary { background: var(--g); color: #04140a; border-color: var(--g); }
+
+/* Schedule */
+.cc-sched-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 16px 0 8px; flex-wrap: wrap; }
+.cc-sched-head .cc-h { margin: 0; flex: 1; }
+.cc-daynav { display: flex; align-items: center; gap: 5px; order: -1; }
+.cc-h { color: var(--amber); border-bottom: 1px solid var(--bd); padding-bottom: 4px; margin: 16px 0 8px; letter-spacing: 0.4px; }
+.cc-sched { display: flex; flex-direction: column; gap: 6px; }
+.cc-row { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--bd); border-radius: 10px; padding: 8px 12px; }
+.cc-row.now { border-color: var(--g); box-shadow: 0 0 0 1px var(--g) inset; }
+.cc-row.done { opacity: 0.45; }
+.cc-row.done .cc-title { text-decoration: line-through; }
+.cc-time { color: var(--gd); font-weight: 600; font-size: 0.8em; min-width: 90px; }
+.cc-ic { font-size: 1em; }
+.cc-title { flex: 1; }
+.cc-act { display: flex; gap: 5px; }
+.cc-empty { color: var(--sub); font-style: italic; padding: 6px; }
+.cc-bucket-h { color: var(--sub); font-size: 0.78em; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; margin: 14px 0 6px; }
+.cc-bucket-h.overdue { color: var(--imp-red); }
+
+/* "+N more →" under a truncated bucket in Overview */
+.cc-more { color: var(--g); font-size: 0.82em; font-weight: 700; cursor: pointer; padding: 4px 8px; border-radius: 7px; width: fit-content; }
+.cc-more:hover { background: rgba(var(--g-rgb), 0.12); }
+.cc-allbtn { display: block; width: 100%; margin: 14px 0 4px; padding: 9px; }
+
+/* Tasks tab: Today | Tomorrow side by side, the rest full width */
+.cc-taskgrid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 12px 0; }
+@media (max-width: 620px) { .cc-taskgrid { grid-template-columns: 1fr; } }
+.cc-panel {
+  background: linear-gradient(180deg, rgba(var(--g-rgb),0.05), rgba(0,0,0,0));
+  border: 1px solid var(--bd); border-radius: 16px; padding: 12px 16px; margin: 12px 0;
+  min-width: 0; /* without this a long task pushes the grid column wide */
+}
+.cc-taskgrid .cc-panel { margin: 0; }
+.cc-panel .cc-bucket-h { margin-top: 0; }
+.cc-panel.today { border-color: rgba(var(--g-rgb), 0.45); }
+.cc-panel.overdue { border-color: color-mix(in srgb, var(--imp-red) 45%, transparent); }
+/* ⭐ TOP bucket — the same set as the amber section in the Overview banner */
+.cc-panel.top {
+  border-color: color-mix(in srgb, var(--amber) 55%, transparent);
+  background: linear-gradient(180deg, color-mix(in srgb, var(--amber) 10%, transparent), rgba(0,0,0,0));
+}
+.cc-bucket-h.top { color: var(--amber); }
+/* panel under the cursor while dragging — shows where the task will land */
+.cc-panel.cc-zone-over { box-shadow: 0 0 0 2px var(--g) inset; }
+/* date next to a task in Overdue / Later / ⭐ */
+.cc-todo-when { color: var(--sub); font-size: 0.78em; font-weight: 700; white-space: nowrap; }
+.cc-todo-when.overdue { color: var(--imp-red); }
+/* Long tasks (with written-out context) clamped to 3 lines, so one entry
+   doesn't eat the whole panel. Full text lives in the tooltip (title). */
+.cc-panel .cc-todo-t {
+  overflow-wrap: anywhere;
+  display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;
+}
+.cc-panel .cc-todo-row { align-items: flex-start; }
+.cc-panel .cc-todo-cb { margin-top: 1px; }
+
+/* Day grid (calendar view) */
+.cc-allday { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 8px; }
+.cc-chip { background: rgba(var(--g-rgb),0.12); border: 1px solid var(--bd); border-radius: 999px; padding: 3px 12px; font-size: 0.82em; cursor: pointer; }
+.cc-chip.done { opacity: 0.45; text-decoration: line-through; }
+.cc-chip.important { background: rgba(var(--imp-red-rgb),0.22); border-color: var(--imp-red); color: var(--imp-red); font-weight: 700; }
+.cc-day { position: relative; margin: 8px 8px 6px 48px; border-left: 1px solid var(--bd); }
+.cc-hline { position: absolute; left: 0; right: 0; border-top: 1px dashed rgba(255,255,255,0.07); pointer-events: none; }
+.cc-hlabel { position: absolute; left: -48px; width: 42px; text-align: right; color: var(--sub); font-size: 0.7em; transform: translateY(-50%); pointer-events: none; }
+/* Muted by default — color only for the block under the "now" line (.cc-ev-current) */
+.cc-ev { position: absolute; box-sizing: border-box; background: var(--card); border: 1px solid var(--bd); border-left: 3px solid var(--bd); border-radius: 8px; padding: 3px 10px; overflow: hidden; cursor: default; transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease; }
+.cc-ev.done { opacity: 0.4; }
+.cc-ev.done .cc-ev-t { text-decoration: line-through; }
+.cc-ev-t { font-weight: 600; font-size: 0.98em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; padding-right: 62px; }
+.cc-ev-time { color: var(--sub); font-size: 0.8em; }
+.cc-ev-actions { position: absolute; top: 3px; right: 5px; display: flex; gap: 3px; }
+.cc-ev-btn { font-size: 1.2em; line-height: 1; cursor: pointer; padding: 2px 5px; border-radius: 7px; background: rgba(0,0,0,0.28); }
+.cc-ev-btn:hover { background: rgba(var(--g-rgb),0.22); }
+
+/* The block under the moving "now" line — the only colored one, hops between blocks on its own */
+.cc-ev.cc-ev-current {
+  border-color: var(--g);
+  border-left-color: var(--g);
+  background: linear-gradient(180deg, rgba(var(--g-rgb),0.28), rgba(var(--g-rgb),0.08));
+  box-shadow: 0 0 0 1px var(--g) inset, 0 0 22px rgba(var(--g-rgb),0.4);
+}
+.cc-ev.cc-ev-current .cc-ev-t { color: #fff; }
+.cc-ev.cc-ev-current .cc-ev-time { color: var(--gd); }
+
+/* A block with important: true — red like the TOP PRIORITY banner, so it's
+   visible in the schedule itself too, not just at the top of the page. The
+   block under the "now" line (.cc-ev-current) takes color priority; combining
+   both gives a brighter red. */
+.cc-ev.important {
+  border-color: var(--imp-red);
+  border-left-color: var(--imp-red);
+  background: linear-gradient(180deg, rgba(var(--imp-red-rgb),0.30), rgba(var(--imp-red-rgb),0.10));
+  box-shadow: 0 0 0 1px var(--imp-red) inset;
+}
+.cc-ev.important .cc-ev-t { color: #fff; }
+.cc-ev.important .cc-ev-time { color: rgba(255,255,255,0.85); }
+.cc-ev.important.cc-ev-current {
+  background: linear-gradient(180deg, rgba(var(--imp-red-rgb),0.42), rgba(var(--imp-red-rgb),0.16));
+  box-shadow: 0 0 0 1px var(--imp-red) inset, 0 0 22px rgba(var(--imp-red-rgb),0.5);
+}
+
+.cc-now { position: absolute; left: 0; right: 4px; height: 0; border-top: 2px solid #ff5a5a; z-index: 4; pointer-events: none; box-shadow: 0 0 10px 1px rgba(255,90,90,0.6); }
+.cc-now::before { content: ''; position: absolute; left: -5px; top: -4px; width: 8px; height: 8px; border-radius: 50%; background: #ff5a5a; box-shadow: 0 0 8px 2px rgba(255,90,90,0.7); }
+
+/* Metrics */
+.cc-metrics { display: flex; gap: 10px; flex-wrap: wrap; }
+.cc-metric { flex: 1; min-width: 120px; background: var(--card); border: 1px solid var(--bd); border-radius: 14px; padding: 14px 18px; }
+.cc-metric b { font-size: 1.8em; color: var(--g); display: block; line-height: 1; }
+.cc-metric-l { margin-top: 6px; }
+.cc-metric-s { color: var(--sub); font-size: 0.78em; }
+
+/* Bar chart */
+.cc-bars { display: flex; align-items: flex-end; gap: 4px; height: 110px; padding: 8px 4px 0; background: var(--card); border: 1px solid var(--bd); border-radius: 14px; }
+.cc-bcol { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; }
+.cc-btrack { position: relative; width: 100%; max-width: 20px; height: 78px; background: rgba(255,255,255,0.04); border-radius: 4px; display: flex; align-items: flex-end; overflow: hidden; }
+.cc-bfill { width: 100%; background: linear-gradient(180deg, var(--g), var(--gd)); border-radius: 4px 4px 0 0; }
+.cc-blabel { color: var(--sub); font-size: 0.62em; margin-top: 4px; }
+
+/* Loose tasks + daily drivers */
+.cc-todo { display: flex; flex-direction: column; gap: 5px; margin: 4px 0 10px; }
+.cc-todo-row { display: flex; align-items: center; gap: 10px; background: var(--card); border: 1px solid var(--bd); border-radius: 9px; padding: 8px 12px; transition: opacity 0.2s ease; }
+.cc-todo-row.done { opacity: 0.45; }
+.cc-todo-row.done .cc-todo-t { text-decoration: line-through; }
+.cc-todo-row.cc-row-fade { opacity: 0; }
+
+/* Dragging = priority order (saved as line order in INBOX.md) */
+.cc-todo-row { cursor: grab; }
+.cc-todo-row:active { cursor: grabbing; }
+.cc-todo-row.cc-dragging { opacity: 0.4; }
+/* line showing where a dropped row will land */
+.cc-todo-row.cc-drop-before { box-shadow: 0 -2px 0 0 var(--g); }
+.cc-todo-row.cc-drop-after  { box-shadow: 0  2px 0 0 var(--g); }
+/* the checkbox must stay clickable despite draggable being on the whole row */
+.cc-todo-cb { cursor: pointer; }
+
+/* ⭐ #top — waiting for /evening to process it. 📅 #scheduled — already processed. */
+.cc-todo-row.top { border-color: color-mix(in srgb, var(--amber) 55%, transparent); }
+.cc-todo-star { font-size: 0.9em; opacity: 0.9; }
+.cc-todo-star.cal { opacity: 0.45; }
+.cc-todo-cb { cursor: pointer; font-size: 1.25em; line-height: 1; }
+.cc-todo-t { flex: 1; }
+.cc-drivers-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.cc-drivers-head .cc-h { flex: 1; }
+.cc-drivers-pct { color: var(--g); font-weight: 800; font-size: 1.1em; }
+
+/* Task navigation */
+.cc-tasknav { display: flex; gap: 4px; align-items: center; }
+
+/* Weekly task view */
+.cc-week-range { color: var(--sub); font-size: 0.82em; margin: 2px 0 8px; }
+.cc-week-day { color: var(--gd); font-weight: 700; font-size: 0.9em; margin: 10px 0 4px; text-transform: capitalize; }
+.cc-week-day.today { color: var(--g); }
+.cc-week-day.today::after { content: ' • today'; font-size: 0.8em; color: var(--g); }
+
+/* Habit heatmap */
+.cc-heat { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; max-width: 280px; margin-top: 8px; }
+.cc-heat-cell { aspect-ratio: 1; border-radius: 4px; background: rgba(255,255,255,0.05); }
+.cc-heat-cell.l1 { background: rgba(var(--g-rgb),0.25); }
+.cc-heat-cell.l2 { background: rgba(var(--g-rgb),0.45); }
+.cc-heat-cell.l3 { background: rgba(var(--g-rgb),0.7); }
+.cc-heat-cell.l4 { background: var(--g); }
+
+/* Inbox */
+.cc-add { display: flex; gap: 6px; margin-bottom: 12px; }
+.cc-input { flex: 1; background: var(--card); border: 1px solid var(--bd); border-radius: 8px; padding: 8px 12px; color: var(--text-normal); }
+.cc-input:focus { border-color: var(--g); outline: none; }
+.cc-inbox { display: flex; flex-direction: column; gap: 5px; margin-bottom: 12px; }
+.cc-irow { display: flex; gap: 10px; align-items: center; background: var(--card); border: 1px solid var(--bd); border-radius: 8px; padding: 7px 12px; }
+
+/* ── Book Tab ─────────────────────────────────────────────
+   The timer is the hero here (bigger than FOCUS on Overview), since it's the
+   one element the user interacts with before they even start reading. */
+.cc-book-head { display: flex; gap: 10px; align-items: center; margin-bottom: 10px; }
+.cc-book-head .cc-h { margin: 0; white-space: nowrap; }
+.cc-book-input { max-width: 320px; }
+.cc-book-timer {
+  background: var(--card); border: 1px solid var(--bd); border-radius: 14px;
+  padding: 18px 12px; margin-bottom: 12px;
+}
+.cc-book-timer .cc-timer-disp { font-size: 3.4em; }
+.cc-lesson-btn { width: 100%; padding: 12px; font-size: 1em; letter-spacing: 1px; margin-bottom: 16px; }
+.cc-book-row { cursor: pointer; }
+.cc-book-row:hover { border-color: var(--g); }
+.cc-book-meta { color: var(--sub); font-size: 0.78em; white-space: nowrap; margin-left: auto; padding-left: 10px; }
+
+/* Timer in a PDF tab's header. `view-action` is a square icon slot by
+   default, so it has to be allowed to grow to the text's width; tabular
+   digits so the counter doesn't jitter every changing second. */
+.cc-pdf-timer {
+  width: auto !important; padding: 0 8px;
+  font-size: 0.8em; font-weight: 600; font-variant-numeric: tabular-nums;
+  color: var(--text-muted); white-space: nowrap;
+}
+.cc-pdf-timer.is-running { color: var(--interactive-accent); }
+
+/* Opening a book: PDF picker + the "book | notes" layout button */
+.cc-book-open { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.cc-book-select { flex: 1; min-width: 0; }
+.cc-book-open-btn { white-space: nowrap; }
+.cc-book-presets { margin-top: 2px; opacity: 0.9; align-items: center; }
+/* Narrow field for just the number, same treatment as .cc-last-page — it
+   should look editable, not like a label. Spinner arrows removed: a mouse
+   can't hit them at this size anyway. */
+.cc-book-minutes {
+  width: 52px; text-align: center; font-variant-numeric: tabular-nums;
+  font-weight: 600; padding: 4px 6px;
+}
+.cc-book-minutes::-webkit-inner-spin-button, .cc-book-minutes::-webkit-outer-spin-button {
+  -webkit-appearance: none; margin: 0;
+}
+
+/* "DONE" button rendered INSIDE the session note (a ```done``` block). It
+   lives outside the plugin's own view, so it only uses Obsidian's own theme
+   variables — that's what keeps it looking consistent across themes and in both modes. */
+.cc-done-btn {
+  /* flex instead of text-align: a theme can inherit `text-indent` on
+     paragraphs, and letter-by-letter `letter-spacing` nudges the last
+     character over — together they pushed "centered" text visually left.
+     Flex centers the content box itself. */
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  /* `width: fit-content` + horizontal `margin: auto`: the button should be
+     the size of its own text and sit centered in the note's column. It used
+     to be `width: 100%`, which turned it into a bar spanning the whole
+     width, looking like a page footer. */
+  width: fit-content; max-width: 100%; box-sizing: border-box;
+  padding: 4px 12px; margin: 6px auto;
+  font-family: inherit; font-size: 0.85em; font-weight: 600; line-height: 1.4;
+  letter-spacing: 0.02em; text-indent: 0;
+  color: var(--text-on-accent); background: var(--interactive-accent);
+  border: none; border-radius: 6px; cursor: pointer;
+}
+.cc-done-btn:hover { background: var(--interactive-accent-hover); }
+
+/* "Where I left off" bar — the text pushes the buttons to the right, so "go
+   back" always sits in the same spot regardless of the page number's length */
+.cc-book-last { display: flex; gap: 8px; align-items: center; margin-bottom: 12px; }
+.cc-book-last-t { color: var(--sub); font-size: 0.85em; white-space: nowrap; }
+.cc-book-last-hint { color: var(--sub); font-size: 0.78em; font-style: italic; margin-right: auto; }
+/* A narrow field for just the number — it should look editable, not like a
+   label. `margin-right: auto` pushes the buttons right, so "Go back" doesn't
+   jump around as the digit count changes. Spinner arrows removed: a mouse
+   can't hit them at this size anyway, and they eat up half the field's width. */
+.cc-last-page {
+  width: 68px; flex: 0 0 auto; margin-right: auto;
+  text-align: center; font-variant-numeric: tabular-nums; font-weight: 600;
+  padding: 4px 6px;
+}
+.cc-last-page::-webkit-inner-spin-button, .cc-last-page::-webkit-outer-spin-button {
+  -webkit-appearance: none; margin: 0;
+}
+
+/* No daily note — a message instead of the habits section silently disappearing */
+.cc-nohabits {
+  background: var(--card); border: 1px dashed var(--bd); border-radius: 10px;
+  padding: 12px 14px; margin-bottom: 12px;
+}
+.cc-nohabits-t { font-weight: 700; margin-bottom: 4px; }
+.cc-nohabits-s { color: var(--sub); font-size: 0.85em; margin-bottom: 8px; }
+
+/* ---------- Wiki Tab ---------- */
+/* Goal: replace the file explorer's tree view once the wiki spans dozens of
+   pages across several folders. Hence the layout "search box → kind chips →
+   collapsed folders": at rest, the whole Library fits on one screen as a
+   handful of lines, not as a list of every filename. */
+.cc-wiki-bar { display: flex; gap: 8px; align-items: center; margin-bottom: 10px; }
+.cc-wiki-search { flex: 1 1 auto; }
+.cc-wiki-count { color: var(--sub); font-size: 0.78em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.cc-wiki-clear { flex: 0 0 auto; }
+.cc-wiki-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.cc-wiki-res { display: flex; flex-direction: column; gap: 4px; }
+
+/* Folder heading — it's navigation in itself, so it gets full width and a
+   cursor that signals a toggle, not a label. */
+/* The backing plate is REQUIRED even for a collapsed folder. Without it the
+   row sits directly on the banner (tabs other than Overview have content on
+   the artwork) and the folder name becomes unreadable — confirmed on a real
+   screenshot. Open state is carried by border/background color, not by the backing's mere presence. */
+.cc-wiki-fold {
+  display: flex; align-items: center; gap: 8px; cursor: pointer;
+  padding: 7px 10px; border-radius: 9px; margin-top: 6px;
+  background: var(--card); border: 1px solid var(--bd);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+.cc-wiki-fold:hover { border-color: var(--g); }
+.cc-wiki-fold.open { border-color: color-mix(in srgb, var(--g) 40%, var(--bd)); }
+.cc-wiki-fold.open .cc-wiki-fname { color: var(--g); }
+.cc-wiki-caret { color: var(--sub); font-size: 0.8em; width: 12px; }
+.cc-wiki-fname { font-weight: 700; }
+.cc-wiki-fn { color: var(--sub); font-size: 0.78em; font-variant-numeric: tabular-nums; }
+/* The entry point to a topic (a `kind: moc` page) on the right — it should be
+   visible WITHOUT expanding the folder, since it answers "where do I start".
+   A missing MOC is equally important information, so it gets its own marker too. */
+.cc-wiki-moc {
+  margin-left: auto; font-size: 0.75em; font-weight: 700;
+  color: var(--g); border: 1px solid color-mix(in srgb, var(--g) 45%, transparent);
+  background: rgba(var(--g-rgb), 0.1); border-radius: 999px; padding: 2px 10px;
+}
+.cc-wiki-moc:hover { background: rgba(var(--g-rgb), 0.2); }
+.cc-wiki-nomoc { margin-left: auto; font-size: 0.72em; color: var(--amber); font-style: italic; }
+.cc-wiki-fold.cc-wiki-warn { border-color: color-mix(in srgb, var(--amber) 45%, transparent); }
+.cc-wiki-fold.cc-wiki-warn .cc-wiki-caret { color: var(--amber); }
+
+.cc-wiki-list { display: flex; flex-direction: column; gap: 3px; padding-left: 18px; }
+
+/* MOC sits above the list and should be recognizable from across the room —
+   it's the one entry point into a topic. Same `--g` accent as the "start
+   here" pill in the folder heading: a new color would only blur a meaning it already carries. */
+.cc-wiki-row--moc {
+  border-left: 3px solid var(--g);
+  background: rgba(var(--g-rgb), 0.07);
+  border-radius: 7px; margin-bottom: 2px;
+}
+.cc-wiki-row--moc .cc-wiki-name { color: var(--g); font-weight: 800; }
+
+/* Shortcut to the source file. Quieter than `⋯`, since it's navigation, not
+   an edit action; it only highlights once a multi-original list is expanded. */
+.cc-wiki-src-b { flex: 0 0 auto; padding: 2px 7px; line-height: 1.2; font-size: 0.85em; opacity: 0.7; }
+.cc-wiki-src-b:hover { opacity: 1; }
+.cc-wiki-src-b.armed { opacity: 1; border-color: var(--g); color: var(--g); }
+.cc-wiki-src { flex-direction: column; align-items: stretch; gap: 2px; }
+/* A wikilink with no file on the other end — the way back to the raw source
+   is broken. It should stay visible, not disappear along with the link. */
+.cc-wiki-src-dead .cc-wiki-act-name { color: var(--amber); text-decoration: line-through; }
+/* A source row — set apart from a wiki page, since it's a raw file, not compiled knowledge */
+.cc-wiki-zrodlo .cc-wiki-name { font-weight: 500; }
+
+/* Subsections of an open folder (CONTENT / TODO). Deliberately quieter than
+   the folder heading: this is a split within one topic, not another level of navigation. */
+.cc-wiki-sub-h {
+  display: flex; align-items: baseline; gap: 6px; cursor: pointer;
+  padding: 5px 0 2px; margin-top: 4px;
+}
+.cc-wiki-sub-h:hover .cc-wiki-sub-n { color: var(--g); }
+.cc-wiki-sub-n { color: var(--sub); font-size: 0.7em; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; }
+.cc-wiki-sub-box { padding-left: 10px; }
+/* TODO is debt, not a task to check off in the panel — amber like a non-empty
+   source queue. Clicking leads to the file where the gap is documented. */
+.cc-wiki-todo { border-left: 2px solid color-mix(in srgb, var(--amber) 55%, transparent); border-radius: 0 7px 7px 0; }
+.cc-wiki-todo-t { font-size: 0.86em; line-height: 1.35; }
+.cc-wiki-todo:hover .cc-wiki-todo-t { color: var(--amber); }
+/* .cc-todo-row sets `cursor: grab` for INBOX's benefit — nothing gets dragged here */
+.cc-wiki-row { cursor: default; padding: 6px 10px; align-items: flex-start; }
+.cc-wiki-main { flex: 1 1 auto; min-width: 0; cursor: pointer; }
+.cc-wiki-main:hover .cc-wiki-name { color: var(--g); }
+.cc-wiki-name { font-weight: 600; }
+/* The subtitle wraps to several lines instead of overflowing the card: a
+   content-match snippet can be long, and it's what explains why the row showed up at all. */
+.cc-wiki-sub { color: var(--sub); font-size: 0.78em; margin-top: 1px; line-height: 1.35; }
+.cc-wiki-why { color: var(--g); }
+.cc-wiki-dots { flex: 0 0 auto; padding: 2px 8px; line-height: 1.2; }
+
+/* Edit panel — collapsed by default so the resting list stays dense. Wraps
+   vertically on a narrow sidebar panel, since that's where this tab most often lives. */
+.cc-wiki-panel {
+  display: flex; gap: 6px; flex-wrap: wrap; align-items: center;
+  padding: 8px 10px; margin: 2px 0 6px;
+  background: var(--card); border: 1px dashed var(--bd); border-radius: 9px;
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+.cc-wiki-sel { flex: 1 1 120px; min-width: 100px; padding: 3px 6px; font-size: 0.85em; }
+.cc-wiki-pew { width: 62px; flex: 0 0 auto; text-align: center; font-variant-numeric: tabular-nums; padding: 3px 6px; }
+.cc-wiki-newname { flex: 1 1 160px; }
+.cc-wiki-kill { flex: 0 0 auto; }
+.cc-wiki-kill.armed { border-color: var(--imp-red); color: var(--imp-red); font-weight: 700; }
+.cc-wiki-add { align-self: flex-start; margin-top: 4px; font-size: 0.82em; opacity: 0.75; }
+.cc-wiki-add:hover { opacity: 1; }
+.cc-wiki-foot { margin-top: 14px; align-self: flex-start; }
+
+/* "What's happening in the Library" bar — source queue + log. Sits ABOVE the
+   search box, since it answers a different question than the rest of the
+   tab: not "what do I know", but "what's unprocessed". Two pills in a row, collapsible, so they don't crowd out the search box. */
+.cc-wiki-act { margin-bottom: 10px; }
+.cc-wiki-act-bar { display: flex; gap: 6px; flex-wrap: wrap; }
+.cc-wiki-act-pill {
+  display: flex; align-items: center; gap: 6px; cursor: pointer;
+  background: var(--card); border: 1px solid var(--bd); border-radius: 999px;
+  padding: 4px 12px; font-size: 0.8em; font-weight: 600; color: var(--sub);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+.cc-wiki-act-pill:hover { color: var(--g); border-color: var(--g); }
+/* A non-empty queue glows amber — that's debt to pay down, not a neutral number */
+.cc-wiki-act-pill.pending { color: var(--amber); border-color: color-mix(in srgb, var(--amber) 45%, transparent); }
+.cc-wiki-act-ic { font-size: 0.95em; }
+/* The last log entry's title can be long — it truncates instead of pushing the bar to two rows */
+.cc-wiki-act-log { flex: 1 1 200px; min-width: 0; }
+.cc-wiki-act-log span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cc-wiki-act-box {
+  margin-top: 6px; padding: 8px 12px;
+  background: var(--card); border: 1px solid var(--bd); border-radius: 9px;
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+.cc-wiki-act-h { color: var(--sub); font-size: 0.7em; letter-spacing: 1px; text-transform: uppercase; font-weight: 800; margin: 6px 0 4px; }
+.cc-wiki-act-row { display: flex; align-items: baseline; gap: 8px; padding: 3px 0; cursor: pointer; }
+.cc-wiki-act-row:hover .cc-wiki-act-name { color: var(--g); }
+.cc-wiki-act-dot { color: var(--sub); }
+.cc-wiki-act-name { flex: 1 1 auto; min-width: 0; font-size: 0.85em; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.cc-wiki-act-when { color: var(--sub); font-size: 0.75em; white-space: nowrap; font-variant-numeric: tabular-nums; }
+/* Closes off the queue list and separates it from the log — without a bottom
+   margin, the hint stuck to the "Recently in the log" heading and looked like its subtitle. */
+.cc-wiki-act-hint {
+  color: var(--sub); font-size: 0.75em; font-style: italic;
+  margin: 6px 0 12px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--bd);
+}
+
+/* Colors tab */
+.cc-colors-sub { margin: 14px 0 6px; font-size: 0.8em; letter-spacing: 1px; text-transform: uppercase; color: var(--sub); }
+.cc-colors-subrow { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.cc-colors-subrow .cc-colors-sub { flex: 1 1 auto; }
+.cc-colors-note { color: var(--sub); font-size: 0.78em; line-height: 1.4; margin: 4px 0 8px; }
+.cc-colors-adv { display: flex; align-items: center; gap: 6px; font-size: 0.85em; cursor: pointer; }
+.cc-colors-resetall { font-size: 0.8em; padding: 2px 10px; }
+.cc-colors-note.is-hidden, .cc-colors-resetall.is-hidden { display: none; }
+
+.cc-color-list { display: flex; flex-direction: column; gap: 6px; }
+.cc-color-row {
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap;
+  background: var(--card); border: 1px solid var(--bd); border-radius: 10px; padding: 6px 10px;
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+.cc-color-row.is-overridden { border-color: var(--g); }
+.cc-color-row.is-off { opacity: 0.55; }
+/* The native picker, stripped down to a swatch. Read-only rows use a plain div with the same look. */
+.cc-color-swatch {
+  flex: 0 0 auto; width: 30px; height: 30px; padding: 0; border-radius: 8px;
+  border: 1px solid var(--bd); background: transparent; cursor: pointer;
+  -webkit-appearance: none; appearance: none;
+}
+input.cc-color-swatch::-webkit-color-swatch-wrapper { padding: 0; }
+input.cc-color-swatch::-webkit-color-swatch { border: 0; border-radius: 7px; }
+.cc-color-name { flex: 1 1 140px; min-width: 0; display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; }
+.cc-color-name code { color: var(--sub); font-size: 0.75em; }
+.cc-color-badge {
+  display: none; font-size: 0.68em; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--g); border: 1px solid var(--g); border-radius: 999px; padding: 0 7px;
+}
+.cc-color-row.is-overridden .cc-color-badge:not(.cc-color-inactive) { display: inline-block; }
+.cc-color-hex, .cc-color-hexfield { font-family: var(--font-monospace); font-size: 0.85em; }
+.cc-color-hex { cursor: pointer; }
+.cc-color-hexfield { width: 84px; padding: 3px 6px; }
+.cc-color-reset { font-size: 0.8em; padding: 2px 10px; visibility: hidden; }
+.cc-color-row.is-overridden .cc-color-reset { visibility: visible; }
+
+.cc-contrast { background: var(--card); border: 1px solid var(--bd); border-radius: 10px; padding: 8px 12px; }
+.cc-contrast-row { display: flex; justify-content: space-between; gap: 12px; padding: 2px 0; font-size: 0.88em; }
+.cc-contrast-val { font-variant-numeric: tabular-nums; }
+.cc-contrast-val.is-low { color: var(--imp-red); font-weight: 700; }
+
+.cc-pal { margin-bottom: 12px; }
+.cc-pal-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.cc-pal-title { font-weight: 700; }
+.cc-pal-file { color: var(--sub); font-size: 0.75em; }
+.cc-pal-tag {
+  display: none; font-size: 0.68em; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase;
+  color: var(--g); border: 1px solid var(--g); border-radius: 999px; padding: 0 7px;
+}
+.cc-pal.is-active .cc-pal-tag { display: inline-block; }
+.cc-pal-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(96px, 1fr)); gap: 8px; }
+.cc-pal-cell {
+  display: flex; flex-direction: column; align-items: stretch; gap: 3px; text-align: center;
+  background: var(--card); border: 1px solid var(--bd); border-radius: 10px; padding: 6px;
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+.cc-pal-swatch { height: 44px; border-radius: 7px; border: 1px solid var(--bd); cursor: pointer; padding: 0; }
+.cc-pal-hex { font-family: var(--font-monospace); font-size: 0.8em; }
+.cc-pal-share { color: var(--sub); font-size: 0.75em; }
+.cc-pal-use { font-size: 0.72em; padding: 2px 6px; }
+.cc-bg {
+  margin-bottom: 10px; padding: 10px 12px;
+  background: var(--card); border: 1px solid var(--bd); border-radius: 10px;
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+}
+.cc-bg.is-set { border-color: var(--g); }
+.cc-bg-head { display: flex; align-items: baseline; gap: 10px; margin-bottom: 8px; }
+.cc-bg-title { font-weight: 700; }
+.cc-bg-active, .cc-bg-set { display: none; }
+.cc-bg.is-active .cc-bg-active, .cc-bg.is-set .cc-bg-set { display: inline-block; }
+.cc-bg-preview {
+  height: 54px; border-radius: 8px; border: 1px solid var(--bd);
+  display: flex; align-items: center; justify-content: center;
+}
+.cc-bg-preview-note { font-size: 0.75em; color: var(--sub); background: color-mix(in srgb, var(--card) 80%, transparent); border-radius: 6px; padding: 1px 8px; }
+.cc-bg-preview-note:empty { display: none; }
+.cc-bg-kinds { display: flex; gap: 4px; margin: 8px 0; }
+.cc-bg-kind { flex: 1 1 0; }
+.cc-bg-kind.is-on { background: var(--g); color: #04140a; border-color: var(--g); }
+.cc-bg-controls { display: flex; flex-direction: column; gap: 6px; }
+.cc-bg-pair, .cc-bg-stop { display: flex; align-items: center; gap: 8px; }
+.cc-bg-tools { display: flex; gap: 6px; }
+.cc-bg-small { font-size: 0.8em; padding: 2px 10px; }
+.cc-bg-angle { display: flex; align-items: center; gap: 10px; font-size: 0.85em; }
+.cc-bg-angle input { flex: 1 1 auto; }
+.cc-bg-angle-val { width: 3.2em; text-align: right; font-variant-numeric: tabular-nums; }
+.cc-bg-slabel { width: 6em; flex: 0 0 auto; }
+.cc-bg-glowhead { display: flex; align-items: baseline; gap: 8px; margin-top: 8px; font-weight: 700; }
+.cc-bg-glowhead .cc-colors-note { margin: 0; font-weight: 400; }
+.cc-bg-glow { display: flex; flex-direction: column; gap: 4px; padding: 6px 8px; border: 1px dashed var(--bd); border-radius: 8px; }
+
+
+/* Status tab (rows come from System/status.json) and the script runner modal */
+.cc-status-bar { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.cc-status-asof { color: var(--sub); font-size: 0.85em; margin-right: auto; }
+.cc-status-asof.stale { color: var(--imp-red); }
+.cc-status-hint { color: var(--sub); font-size: 0.8em; }
+.cc-status-list { display: flex; flex-direction: column; gap: 8px; }
+.cc-status-row { display: flex; align-items: flex-start; gap: 12px; background: var(--card); border: 1px solid var(--bd); border-radius: 10px; padding: 10px 14px; }
+.cc-status-dot { width: 10px; height: 10px; border-radius: 50%; margin-top: 6px; flex: none; background: var(--g); }
+.cc-status-row.warn .cc-status-dot { background: var(--imp-red); }
+.cc-status-row.warn { border-color: color-mix(in srgb, var(--imp-red) 45%, transparent); }
+.cc-status-row.info .cc-status-dot { background: var(--sub); }
+.cc-status-label { min-width: 150px; font-weight: 700; }
+.cc-status-val { flex: 1; }
+.cc-status-detail { color: var(--sub); font-size: 0.85em; margin-top: 2px; }
+.cc-run-list { display: flex; flex-direction: column; gap: 6px; margin-bottom: 12px; }
+.cc-run-item { display: flex; flex-direction: column; gap: 2px; }
+.cc-run-item.bad code { color: var(--imp-red); }
+.cc-run-name { font-weight: 700; }
+.cc-run-out { margin-top: 14px; display: flex; flex-direction: column; gap: 12px; }
+.cc-run-sec pre { max-height: 240px; overflow: auto; white-space: pre-wrap; margin: 4px 0; padding: 8px 10px; background: var(--background-secondary); border-radius: 8px; font-size: 0.85em; }
+.cc-run-meta { font-size: 0.8em; color: var(--sub); }
+.cc-run-meta.fail { color: var(--imp-red); }

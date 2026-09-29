@@ -1,0 +1,241 @@
+/* dashboard.css — "Life OS Hub" look, scoped to notes with cssclass: dashboard */
+/* Near-black background, green accents, cards. Doesn't touch the rest of the vault. */
+
+.dashboard {
+  --d-green: var(--cc-accent, #4ade80);
+  --d-green-dim: var(--cc-accent-dark, #22c55e);
+  --d-bg: var(--background-primary);
+  /* Light mode: generic, follows the active theme. Dark mode: Life OS Hub's signature look. */
+  --d-card: var(--background-secondary);
+  --d-border: var(--background-modifier-border);
+  --d-sub: var(--text-muted);
+}
+
+body.theme-dark .dashboard {
+  --d-card: var(--cc-card, #0d0d0d);
+  --d-border: var(--cc-border, #1f3a26);
+  --d-sub: var(--cc-sub, #7c8a80);
+}
+
+.dashboard { background: var(--d-bg); }
+
+/* Headings */
+.dashboard h1 {
+  color: var(--d-green);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+}
+.dashboard h2 {
+  color: var(--d-green-dim);
+  border-bottom: 1px solid var(--d-border);
+  padding-bottom: 0.25em;
+  margin-top: 1.4em;
+}
+
+/* CURRENT FOCUS card (rendered by the plugin: div.focus-card) */
+.dashboard .focus-card {
+  background: linear-gradient(180deg, rgba(74,222,128,0.06), rgba(74,222,128,0.01));
+  border: 1px solid var(--d-green);
+  border-radius: 16px;
+  padding: 18px 22px;
+  margin: 8px 0 4px;
+  box-shadow: 0 8px 30px rgba(74,222,128,0.08);
+}
+.dashboard .focus-card .focus-label {
+  color: var(--d-green);
+  font-size: 0.8em;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+.dashboard .focus-card h2 {
+  border: none;
+  margin: 6px 0 4px;
+  font-size: 1.7em;
+  color: var(--text-normal);
+}
+.dashboard .focus-card .focus-time {
+  color: var(--d-green-dim);
+  font-weight: 600;
+}
+
+/* Metric cards (rendered by the plugin: div.metrics-row > div.metric) */
+.dashboard .metrics-row { display: flex; flex-wrap: wrap; gap: 10px; }
+.dashboard .metric {
+  background: var(--d-card);
+  border: 1px solid var(--d-border);
+  border-radius: 14px;
+  padding: 14px 18px;
+  min-width: 130px;
+  flex: 1;
+}
+.dashboard .metric b { font-size: 1.9em; color: var(--d-green); display: block; line-height: 1; }
+.dashboard .metric .metric-label { color: var(--text-normal); font-size: 0.9em; margin-top: 6px; }
+.dashboard .metric .metric-sub { color: var(--d-sub); font-size: 0.78em; }
+
+/* Schedule table */
+.dashboard table { width: 100%; border-collapse: collapse; }
+.dashboard th { color: var(--d-green-dim); text-align: left; font-weight: 600; }
+.dashboard td { border-top: 1px solid var(--d-border); padding: 7px 8px; }
+
+/* Tasks / lists */
+.dashboard ul.contains-task-list { padding-left: 0.5em; }
+.dashboard .callout { border-radius: 14px; border-color: var(--d-border); }
+
+/* Hours bar chart (rendered by the plugin: div.bar-chart > div.bar-col > div.bar-track > div.bar-fill) */
+.dashboard .bar-chart {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  height: 100px;
+  padding: 8px 4px 0;
+  background: var(--d-card);
+  border: 1px solid var(--d-border);
+  border-radius: 14px;
+}
+.dashboard .bar-col { display: flex; flex-direction: column; align-items: center; flex: 1; height: 100%; }
+.dashboard .bar-track {
+  position: relative;
+  width: 100%;
+  max-width: 18px;
+  height: 72px;
+  background: rgba(255,255,255,0.04);
+  border-radius: 4px;
+  display: flex;
+  align-items: flex-end;
+  overflow: hidden;
+}
+.dashboard .bar-fill {
+  width: 100%;
+  background: linear-gradient(180deg, var(--d-green), var(--d-green-dim));
+  border-radius: 4px 4px 0 0;
+  min-height: 2px;
+}
+.dashboard .bar-label { color: var(--d-sub); font-size: 0.65em; margin-top: 4px; }
+
+/* Habit heatmap (rendered by the plugin: div.heatmap > div.heat-cell.heat-0..4) */
+.dashboard .heatmap {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+  max-width: 260px;
+}
+.dashboard .heat-cell { aspect-ratio: 1; border-radius: 4px; background: rgba(255,255,255,0.05); }
+.dashboard .heat-0 { background: rgba(255,255,255,0.05); }
+.dashboard .heat-1 { background: rgba(74,222,128,0.25); }
+.dashboard .heat-2 { background: rgba(74,222,128,0.45); }
+.dashboard .heat-3 { background: rgba(74,222,128,0.7); }
+.dashboard .heat-4 { background: var(--d-green); }
+
+/* Cockpit: focus timer + progress ring (rendered by the plugin) */
+.dashboard .cockpit {
+  display: flex;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin: 4px 0 10px;
+}
+.dashboard .cockpit > div {
+  background: linear-gradient(180deg, rgba(74,222,128,0.05), rgba(0,0,0,0));
+  border: 1px solid var(--d-border);
+  border-radius: 16px;
+  padding: 16px 20px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.dashboard .timer-box { flex: 2; min-width: 240px; }
+.dashboard .timer-display {
+  font-size: 2.6em;
+  font-weight: 800;
+  color: var(--d-green);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 1px;
+  line-height: 1;
+}
+.dashboard .timer-side { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.dashboard .timer-label { color: var(--d-sub); font-size: 0.72em; text-transform: uppercase; letter-spacing: 2px; }
+.dashboard .timer-btns { display: flex; gap: 6px; flex-wrap: wrap; }
+.dashboard .timer-btn {
+  background: var(--d-card);
+  border: 1px solid var(--d-border);
+  color: var(--text-normal);
+  border-radius: 8px;
+  padding: 5px 12px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.85em;
+}
+.dashboard .timer-btn:hover { border-color: var(--d-green); color: var(--d-green); }
+.dashboard .timer-btn.primary { background: var(--d-green); color: #04140a; border-color: var(--d-green); }
+.dashboard .ring-box { flex: 1; min-width: 170px; justify-content: center; }
+.dashboard .ring-box .ring-caption { color: var(--d-sub); font-size: 0.78em; }
+.dashboard .ring-box .ring-caption b { color: var(--text-normal); display: block; font-size: 1.15em; }
+
+/* Live clock (rendered by the plugin: div.cc-clock) */
+.dashboard .cc-clock {
+  color: var(--d-green);
+  font-weight: 700;
+  font-size: 1.05em;
+  letter-spacing: 0.5px;
+  margin: -6px 0 10px;
+}
+
+/* Interactive schedule (rendered by the plugin: div.sched-table > div.sched-row) */
+.dashboard .sched-table { display: flex; flex-direction: column; gap: 8px; }
+.dashboard .sched-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--d-card);
+  border: 1px solid var(--d-border);
+  border-radius: 14px;
+  padding: 12px 16px;
+  transition: border-color 0.4s ease, box-shadow 0.4s ease, background 0.4s ease;
+}
+.dashboard .sched-row.sched-now {
+  border-color: var(--d-green);
+  background: linear-gradient(180deg, rgba(74,222,128,0.14), rgba(74,222,128,0.03));
+  box-shadow: 0 0 0 1px var(--d-green) inset, 0 0 26px rgba(74,222,128,0.28);
+}
+.dashboard .sched-row.sched-now .sched-title { color: #fff; font-weight: 700; }
+.dashboard .sched-row.sched-next { border-color: rgba(74,222,128,0.35); }
+.dashboard .sched-row.sched-done { opacity: 0.4; }
+.dashboard .sched-row.sched-done .sched-title { text-decoration: line-through; }
+.dashboard .sched-time { color: var(--d-green-dim); font-weight: 600; font-size: 0.82em; min-width: 92px; }
+.dashboard .sched-icon { font-size: 1em; }
+.dashboard .sched-title { flex: 1; color: var(--text-normal); }
+.dashboard .sched-badge {
+  font-size: 0.7em;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  padding: 4px 11px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.dashboard .sched-badge-now { background: var(--d-green); color: #04140a; }
+.dashboard .sched-badge-next { background: transparent; border: 1px solid var(--d-green-dim); color: var(--d-green-dim); }
+.dashboard .sched-actions { display: flex; align-items: center; gap: 6px; }
+.dashboard .sched-btn {
+  background: transparent;
+  border: 1px solid var(--d-border);
+  border-radius: 6px;
+  padding: 2px 9px;
+  cursor: pointer;
+  color: var(--d-sub);
+  font-size: 0.9em;
+}
+.dashboard .sched-btn:hover { border-color: var(--d-green); color: var(--d-green); }
+.dashboard .sched-empty { color: var(--d-sub); font-style: italic; padding: 4px; }
+
+/* Button (rendered by the plugin: button.cc-button) */
+.dashboard .cc-button {
+  background: var(--d-card);
+  border: 1px solid var(--d-green);
+  color: var(--d-green);
+  border-radius: 10px;
+  padding: 8px 16px;
+  font-weight: 600;
+  cursor: pointer;
+}
+.dashboard .cc-button:hover { background: rgba(74,222,128,0.12); }

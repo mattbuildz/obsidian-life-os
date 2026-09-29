@@ -1,0 +1,13 @@
+{
+  "theme": "system",
+  "cssTheme": "Border",
+  "enabledCssSnippets": [
+    "dashboard",
+    "full-calendar",
+    "border-fonts",
+    "life-os-look"
+  ],
+  "translucency": false,
+  "showRibbon": true,
+  "interfaceFontFamily": "IM Fell English"
+}

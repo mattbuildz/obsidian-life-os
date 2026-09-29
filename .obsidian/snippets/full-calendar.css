@@ -1,0 +1,94 @@
+/* full-calendar.css — clear highlight for the active view (Day / Week / Month / List) */
+/* Only touches the Full Calendar view. Rest of the vault unchanged. */
+
+.fc {
+  --fcv-accent: var(--cc-accent, #4ade80);
+  --fcv-accent-dark: var(--cc-accent-dark, #22c55e);
+  --fcv-on-accent: #04140a;
+}
+
+/* View button group — a frame so it's clear "where am I" */
+.fc .fc-button-group {
+  background: var(--background-secondary);
+  border: 1px solid var(--background-modifier-border);
+  border-radius: 10px;
+  padding: 3px;
+  gap: 3px;
+}
+
+/* Inactive buttons — dimmed, so the active one stands out by contrast */
+.fc .fc-button-group > .fc-button.fc-button-primary {
+  background: transparent !important;
+  color: var(--text-muted) !important;
+  border-radius: 7px !important;
+  font-weight: 600;
+  transition: background 0.15s ease, color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.fc .fc-button-group > .fc-button.fc-button-primary:hover {
+  background: var(--background-modifier-hover) !important;
+  color: var(--text-normal) !important;
+}
+
+/* ACTIVE VIEW — green background, dark text, bold, glow */
+.fc .fc-button-group > .fc-button.fc-button-primary.fc-button-active,
+.fc .fc-button-group > .fc-button.fc-button-primary.fc-button-active:hover,
+.fc .fc-button-group > .fc-button.fc-button-primary.fc-button-active:focus {
+  background: linear-gradient(180deg, var(--fcv-accent), var(--fcv-accent-dark)) !important;
+  color: var(--fcv-on-accent) !important;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  box-shadow:
+    0 0 0 1px var(--fcv-accent-dark),
+    0 2px 10px rgba(74, 222, 128, 0.35);
+}
+
+/* Removes the browser's blue focus ring, which muddied readability */
+.fc .fc-button-primary:focus,
+.fc .fc-button-primary:not(:disabled):active:focus,
+.fc .fc-button-primary:not(:disabled).fc-button-active:focus {
+  box-shadow:
+    0 0 0 1px var(--fcv-accent-dark),
+    0 2px 10px rgba(74, 222, 128, 0.35) !important;
+}
+
+/* Nav buttons (prev / next / today) — consistent, but not shouting */
+.fc .fc-toolbar .fc-today-button {
+  background: transparent !important;
+  color: var(--fcv-accent) !important;
+  border: 1px solid var(--fcv-accent-dark) !important;
+  border-radius: 8px !important;
+  font-weight: 600;
+}
+.fc .fc-toolbar .fc-today-button:hover:not(:disabled) {
+  background: rgba(74, 222, 128, 0.12) !important;
+}
+.fc .fc-toolbar .fc-today-button:disabled {
+  opacity: 0.45;
+}
+
+/* Title (e.g. "July 2026") — stronger, so the visible range is obvious */
+.fc .fc-toolbar-title {
+  font-weight: 700;
+  color: var(--text-normal);
+}
+
+/* Bonus: "today" in the grid stands out more than the default gray smudge */
+.fc .fc-day-today {
+  background: rgba(74, 222, 128, 0.07) !important;
+}
+.fc .fc-col-header-cell.fc-day-today .fc-col-header-cell-cushion {
+  color: var(--fcv-accent) !important;
+  font-weight: 800;
+}
+.fc .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+  color: var(--fcv-on-accent);
+  background: var(--fcv-accent);
+  border-radius: 6px;
+  padding: 1px 7px;
+  font-weight: 800;
+}
+
+/* Mobile (iPhone) — same rules, just tighter */
+.is-phone .fc .fc-button-group { padding: 2px; }
+.is-phone .fc .fc-button-group > .fc-button.fc-button-primary { padding: 4px 8px !important; }

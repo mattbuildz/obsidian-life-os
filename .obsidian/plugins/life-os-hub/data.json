@@ -1,0 +1,72 @@
+{
+  "book": "",
+  "pdfPath": "Library/books/A Short Guide to This Vault/a-short-guide-to-this-vault.pdf",
+  "minutes": 30,
+  "colors": {},
+  "background": {
+    "dark": {
+      "kind": "gradient",
+      "angle": 160,
+      "stops": [
+        "#07070E",
+        "#14142A",
+        "#08080F"
+      ],
+      "glows": [
+        {
+          "x": 22,
+          "y": 18,
+          "color": "#444477",
+          "alpha": 34,
+          "size": 55
+        },
+        {
+          "x": 72,
+          "y": 42,
+          "color": "#8C462D",
+          "alpha": 24,
+          "size": 48
+        },
+        {
+          "x": 50,
+          "y": 92,
+          "color": "#A8D8B4",
+          "alpha": 14,
+          "size": 52
+        }
+      ]
+    },
+    "light": {
+      "kind": "gradient",
+      "angle": 160,
+      "stops": [
+        "#F8F9FB",
+        "#E6E8F0",
+        "#F1F2F6"
+      ],
+      "glows": [
+        {
+          "x": 22,
+          "y": 18,
+          "color": "#555588",
+          "alpha": 13,
+          "size": 55
+        },
+        {
+          "x": 72,
+          "y": 40,
+          "color": "#E8836F",
+          "alpha": 13,
+          "size": 48
+        },
+        {
+          "x": 50,
+          "y": 92,
+          "color": "#668899",
+          "alpha": 18,
+          "size": 52
+        }
+      ]
+    }
+  }
+}

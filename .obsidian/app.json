@@ -1,0 +1,7 @@
+{
+  "baseColorScheme": "dark",
+  "promptDelete": false,
+  "attachmentFolderPath": "System/Attachments",
+  "newLinkFormat": "shortest",
+  "alwaysUpdateLinks": true
+}
