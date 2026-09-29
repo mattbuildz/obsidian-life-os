@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "d=$(printf '%s' \"$CLAUDE_PROJECT_DIR\" | tr '\\\\' '/'); while [ ! -f \"$d/.claude/hooks/library.py\" ]; do p=$(dirname \"$d\"); [ \"$p\" = \"$d\" ] && exit 0; d=\"$p\"; done; for PY in python3 python py; do \"$PY\" -c '' >/dev/null 2>&1 && exec \"$PY\" \"$d/.claude/hooks/library.py\" pre; done; exit 0"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit|NotebookEdit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "d=$(printf '%s' \"$CLAUDE_PROJECT_DIR\" | tr '\\\\' '/'); while [ ! -f \"$d/.claude/hooks/library.py\" ]; do p=$(dirname \"$d\"); [ \"$p\" = \"$d\" ] && exit 0; d=\"$p\"; done; for PY in python3 python py; do \"$PY\" -c '' >/dev/null 2>&1 && exec \"$PY\" \"$d/.claude/hooks/library.py\" post; done; exit 0"
+          }
+        ]
+      }
+    ]
+  }
+}
