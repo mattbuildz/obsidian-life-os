@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>What's inside: the zone contract</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #0d1117; color: #f0f6fc; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif; padding: 2rem; }
+    .eyebrow { font-family: ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace; font-size: 0.7rem; letter-spacing: 0.16em; text-transform: uppercase; color: #9198a1; margin-bottom: 0.4rem; }
+    h1 { font-size: 1.5rem; font-weight: 600; margin-bottom: 1.25rem; }
+    svg { display: block; max-width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <p class="eyebrow">What's inside · GitHub Primer skin (dark)</p>
+  <h1>What's inside: the zone contract</h1>
+  <svg viewBox="0 0 832 256" width="832" height="256" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="inside-zone-contract-dark-title inside-zone-contract-dark-desc">
+      <title id="inside-zone-contract-dark-title">What's inside: the zone contract</title>
+      <desc id="inside-zone-contract-dark-desc">Life and Library side by side; the only write from Life into Library is a new file in sources/inbox, and the only things Library takes from Life are reads of avatar.md and roadmap-brief.md.</desc>
+      <defs><marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#9198a1"/></marker><marker id="arrow-focal" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f0883e"/></marker></defs>
+      <rect width="100%" height="100%" fill="#0d1117"/>
+      <rect x="16" y="16" width="336" height="224" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1"/>
+      <text x="32" y="38" fill="#9198a1" font-size="11" font-weight="500" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" letter-spacing="0.1em">LIFE/ · CHANGES DAILY</text>
+      <rect x="480" y="16" width="336" height="224" rx="8" fill="#151b23" stroke="#3d444d" stroke-width="1"/>
+      <text x="496" y="38" fill="#9198a1" font-size="11" font-weight="500" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" letter-spacing="0.1em">LIBRARY/ · WHAT YOU LEARN</text>
+      <path d="M 352 78 H 494" fill="none" stroke="#f0883e" stroke-width="1.5" marker-end="url(#arrow-focal)"/>
+      <path d="M 480 196 H 338" fill="none" stroke="#9198a1" stroke-width="1.5" stroke-dasharray="5,4" marker-end="url(#arrow)"/>
+      <rect x="361.6" y="57" width="108.8" height="15" rx="2" fill="#0d1117"/>
+      <text x="416" y="68" fill="#f0883e" font-size="11" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">NEW FILES ONLY</text>
+      <rect x="368.0" y="175" width="80.0" height="15" rx="2" fill="#0d1117"/>
+      <text x="408" y="186" fill="#9198a1" font-size="11" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle" letter-spacing="0.06em">READS ONLY</text>
+      <rect x="32" y="56" width="144" height="44" rx="6" fill="#0d1117" stroke="#3d444d" stroke-width="1"/>
+      <text x="104.0" y="83.0" fill="#f0f6fc" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">Calendar/</text>
+      <rect x="192" y="56" width="144" height="44" rx="6" fill="#0d1117" stroke="#3d444d" stroke-width="1"/>
+      <text x="264.0" y="83.0" fill="#f0f6fc" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">Journal/</text>
+      <rect x="32" y="112" width="144" height="44" rx="6" fill="#0d1117" stroke="#3d444d" stroke-width="1"/>
+      <text x="104.0" y="139.0" fill="#f0f6fc" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">INBOX.md</text>
+      <rect x="192" y="112" width="144" height="44" rx="6" fill="#0d1117" stroke="#3d444d" stroke-width="1"/>
+      <text x="264.0" y="139.0" fill="#f0f6fc" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">Patterns/</text>
+      <rect x="32" y="168" width="304" height="56" rx="6" fill="#0d1117" stroke="#3d444d" stroke-width="1"/>
+      <text x="184.0" y="193.0" fill="#f0f6fc" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">avatar.md · roadmap-brief.md</text>
+      <text x="184.0" y="211.0" fill="#9198a1" font-size="12" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif" text-anchor="middle">the two files Library reads</text>
+      <rect x="496" y="56" width="304" height="44" rx="6" fill="#271a10" stroke="#f0883e" stroke-width="1.5"/>
+      <text x="648.0" y="83.0" fill="#f0883e" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">sources/inbox/</text>
+      <rect x="496" y="112" width="144" height="44" rx="6" fill="#0d1117" stroke="#3d444d" stroke-width="1"/>
+      <text x="568.0" y="139.0" fill="#f0f6fc" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">wiki/</text>
+      <rect x="656" y="112" width="144" height="44" rx="6" fill="#0d1117" stroke="#3d444d" stroke-width="1"/>
+      <text x="728.0" y="139.0" fill="#f0f6fc" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">INDEX.md</text>
+      <rect x="496" y="168" width="144" height="56" rx="6" fill="#0d1117" stroke="#3d444d" stroke-width="1"/>
+      <text x="568.0" y="201.0" fill="#f0f6fc" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">books/</text>
+      <rect x="656" y="168" width="144" height="56" rx="6" fill="#0d1117" stroke="#3d444d" stroke-width="1"/>
+      <text x="728.0" y="201.0" fill="#f0f6fc" font-size="14" font-weight="600" font-family="ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace" text-anchor="middle">explanations/</text>
+    </svg>
+</body>
+</html>

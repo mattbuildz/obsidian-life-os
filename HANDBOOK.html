@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Handbook — Life OS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f3f0ea;
+    --bg-2: #fffdf9;
+    --card: rgba(255,255,255,0.65);
+    --card-border: rgba(30,25,15,0.10);
+    --text: #23201a;
+    --text-muted: #6b6558;
+    --accent: #2f6f7d;      /* slate-teal, light mode — Library */
+    --accent-soft: rgba(47,111,125,0.12);
+    --warm: #b8583f;        /* Life */
+    --warm-soft: rgba(184,88,63,0.12);
+    --code-bg: rgba(30,25,15,0.06);
+    --shadow: 0 10px 30px rgba(30,25,15,0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c0e10;
+      --bg-2: #14171a;
+      --card: rgba(255,255,255,0.035);
+      --card-border: rgba(255,255,255,0.09);
+      --text: #e9e6df;
+      --text-muted: #948f83;
+      --accent: #4ade80;    /* jade, dark mode — Library */
+      --accent-soft: rgba(74,222,128,0.12);
+      --warm: #e6a85c;      /* Life */
+      --warm-soft: rgba(230,168,92,0.12);
+      --code-bg: rgba(255,255,255,0.06);
+      --shadow: 0 10px 34px rgba(0,0,0,0.45);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+  }
+  body {
+    background-image:
+      radial-gradient(ellipse 900px 500px at 15% -10%, var(--accent-soft), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 100% 0%, var(--warm-soft), transparent 60%);
+    background-attachment: fixed;
+  }
+  h1, h2, h3 {
+    font-family: 'IM Fell English', Georgia, 'Iowan Old Style', serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: var(--text);
+  }
+  .wrap { max-width: 880px; margin: 0 auto; padding: 56px 24px 100px; }
+
+  /* ---- Hero ---- */
+  header.hero { text-align: center; margin-bottom: 40px; }
+  header.hero .kicker {
+    font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 10px;
+  }
+  header.hero h1 { font-size: 44px; margin: 0 0 14px; }
+  header.hero p.lede {
+    font-size: 17px; color: var(--text-muted); max-width: 620px; margin: 0 auto;
+  }
+
+  /* ---- Orientation map (just the two pages, both clickable) ---- */
+  .orient {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 12px; margin: 36px 0 40px;
+  }
+  .orient .tile {
+    display: block; position: relative; width: 260px; color: var(--text); text-decoration: none;
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 14px 16px;
+    transition: border-color .15s, transform .15s;
+  }
+  a.tile { cursor: pointer; }
+  a.tile:hover { border-color: var(--accent); transform: translateY(-1px); }
+  a.tile::after {
+    content: "↗ browser only"; position: absolute; top: 10px; right: 10px;
+    font-size: 10px; font-weight: 700; letter-spacing: .02em;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 3px 9px; border-radius: 999px;
+    opacity: 0; transform: translateY(-3px);
+    transition: opacity .15s, transform .15s; pointer-events: none;
+  }
+  a.tile:hover::after { opacity: 1; transform: translateY(0); }
+  .orient .tile .tag {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--accent); font-weight: 600; display: block; margin-bottom: 4px;
+  }
+  .orient .tile .name { font-weight: 600; display: block; margin-bottom: 2px; }
+  .orient .tile .desc { font-size: 13px; color: var(--text-muted); }
+  .orient .tile.current { border-color: var(--accent); background: var(--accent-soft); }
+
+  /* ---- CSS-only tabs (no JS: the HTML Reader plugin blocks <script>) ---- */
+  .tab-input { position: absolute; opacity: 0; pointer-events: none; }
+  .tabbar {
+    display: flex; flex-wrap: wrap; justify-content: center;
+    gap: 10px 22px; margin: 0 0 44px;
+  }
+  .tabgroup { display: inline-flex; background: var(--card); border: 1px solid var(--card-border); border-radius: 999px; padding: 4px; gap: 2px; }
+  .tabgroup label {
+    cursor: pointer; padding: 8px 18px; border-radius: 999px;
+    font-size: 14px; font-weight: 600; color: var(--text-muted);
+    transition: color .15s, background .15s;
+    user-select: none;
+  }
+  #zone-life:checked ~ .tabbar .zone-group label.for-life { background: var(--warm-soft); color: var(--warm); }
+  #zone-library:checked ~ .tabbar .zone-group label.for-library { background: var(--accent-soft); color: var(--accent); }
+  #view-cheat:checked ~ .tabbar .view-group label.for-cheat { background: var(--code-bg); color: var(--text); }
+  #view-idea:checked ~ .tabbar .view-group label.for-idea { background: var(--code-bg); color: var(--text); }
+
+  .panel { display: none; }
+  #zone-life:checked ~ #view-cheat:checked ~ .content #panel-life-cheat,
+  #zone-life:checked ~ #view-idea:checked ~ .content #panel-life-idea,
+  #zone-library:checked ~ #view-cheat:checked ~ .content #panel-library-cheat,
+  #zone-library:checked ~ #view-idea:checked ~ .content #panel-library-idea {
+    display: block;
+  }
+
+  .zone-chip {
+    display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: .08em;
+    text-transform: uppercase; padding: 4px 12px; border-radius: 999px;
+    margin-bottom: 14px;
+  }
+  .zone-life .zone-chip { background: var(--warm-soft); color: var(--warm); }
+  .zone-library .zone-chip { background: var(--accent-soft); color: var(--accent); }
+  .zone-life h2 .num { background: var(--warm); }
+  .zone-life ul.steps li::before { border-color: var(--warm); color: var(--warm); }
+  .zone-library h2 .num { background: var(--accent); }
+
+  /* ---- Sections ---- */
+  section.block { margin: 0 0 64px; scroll-margin-top: 24px; }
+  section.block:last-child { margin-bottom: 0; }
+  section.block > h2 {
+    font-size: 26px; margin: 0 0 6px;
+    display: flex; align-items: center; gap: 10px;
+  }
+  section.block > h2 .num {
+    font-family: Inter, sans-serif; font-size: 14px; font-weight: 600;
+    color: var(--bg);
+    width: 26px; height: 26px; border-radius: 50%;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+  }
+  section.block > p.section-sub { color: var(--text-muted); margin: 0 0 22px; }
+
+  /* ---- Cards / tables ---- */
+  .card {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 14px; padding: 22px 24px; box-shadow: var(--shadow);
+    overflow-x: auto; margin-bottom: 14px;
+  }
+  table { width: 100%; min-width: 420px; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: left; padding: 9px 11px; border-bottom: 1px solid var(--card-border); vertical-align: top; }
+  th { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); font-weight: 600; }
+  tr:last-child td { border-bottom: none; }
+  code {
+    background: var(--code-bg); padding: 2px 6px; border-radius: 5px;
+    font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace; font-size: 0.87em;
+  }
+  pre {
+    background: var(--code-bg); border: 1px solid var(--card-border);
+    border-radius: 10px; padding: 14px 16px; overflow-x: auto;
+    font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace; font-size: 13px;
+  }
+  pre code { background: none; padding: 0; }
+  ul.steps { list-style: none; margin: 0; padding: 0; counter-reset: step; }
+  ul.steps li {
+    counter-increment: step; position: relative; padding: 0 0 16px 40px;
+    border-left: 2px solid var(--card-border); margin-left: 13px;
+  }
+  ul.steps li:last-child { border-left-color: transparent; padding-bottom: 0; }
+  ul.steps li::before {
+    content: counter(step); position: absolute; left: -13px; top: 0;
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--bg-2); border: 2px solid var(--accent); color: var(--accent);
+    font-size: 12px; font-weight: 700; font-family: Inter, sans-serif;
+    display: flex; align-items: center; justify-content: center;
+  }
+  ul.steps li b { color: var(--text); }
+  ul.plain { margin: 0; padding-left: 20px; color: var(--text-muted); font-size: 14.5px; }
+  ul.plain li { margin-bottom: 8px; }
+  ul.plain li b { color: var(--text); }
+
+  details {
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 14px 18px; margin-top: 4px; margin-bottom: 14px;
+  }
+  details summary { cursor: pointer; font-weight: 600; color: var(--accent); list-style: none; }
+  .zone-life details summary { color: var(--warm); }
+  details summary::-webkit-details-marker { display: none; }
+  details summary::before { content: "▸ "; }
+  details[open] summary::before { content: "▾ "; }
+  details p, details ul, details ol, details table { color: var(--text-muted); font-size: 14.5px; }
+
+  .note {
+    border-left: 3px solid var(--warm); background: var(--accent-soft);
+    border-radius: 0 10px 10px 0; padding: 12px 16px; font-size: 14.5px;
+    color: var(--text-muted); margin: 14px 0;
+  }
+  .note b { color: var(--text); }
+  .flow {
+    text-align: center; font-family: 'SF Mono', Menlo, Consolas, monospace;
+    font-size: 13px; color: var(--text-muted); margin: 0 0 18px; line-height: 1.9;
+  }
+  .flow b { color: var(--text); font-size: 14px; }
+
+  /* ---- Diagram: daily loop (circular, animated dot) ---- */
+  .diagram { display: flex; justify-content: center; margin: 8px 0 24px; }
+  .diagram svg { max-width: 100%; height: auto; }
+  .loop-node circle { fill: var(--bg-2); stroke: var(--card-border); stroke-width: 1.5; }
+  .loop-node text { fill: var(--text); font-family: Inter, sans-serif; font-size: 13px; font-weight: 600; }
+  .loop-node .sub { fill: var(--text-muted); font-size: 10.5px; font-weight: 400; }
+  .loop-path { fill: none; stroke: var(--card-border); stroke-width: 2; stroke-dasharray: 4 6; }
+  .loop-dot { fill: var(--warm); filter: drop-shadow(0 0 5px var(--warm)); }
+  .loop-anim { offset-path: path("M 220,50 A 150,150 0 1 1 219,50"); animation: travel-loop 9s linear infinite; }
+  @keyframes travel-loop { from { offset-distance: 0%; } to { offset-distance: 100%; } }
+
+  /* ---- Diagram: pipeline (linear, animated pulse) ---- */
+  .pipe-node rect { fill: var(--bg-2); stroke: var(--card-border); stroke-width: 1.5; rx: 10; }
+  .pipe-node text { fill: var(--text); font-family: Inter, sans-serif; font-size: 12.5px; font-weight: 600; }
+  .pipe-node .sub { fill: var(--text-muted); font-size: 10.5px; font-weight: 400; }
+  .pipe-arrow-bg { stroke: var(--card-border); stroke-width: 2; }
+  .pipe-arrow-flow {
+    stroke: var(--accent); stroke-width: 2.5; stroke-linecap: round;
+    stroke-dasharray: 10 14; marker-end: url(#arrowhead);
+    animation: flow 1.1s linear infinite;
+    filter: drop-shadow(0 0 3px var(--accent));
+  }
+  @keyframes flow { to { stroke-dashoffset: -48; } }
+
+  /* ---- Back to top: a plain anchor (no script — the HTML Reader blocks it), jumps at once ---- */
+  .to-top {
+    display: flex; align-items: center; justify-content: center;
+    width: 46px; height: 46px; margin: 56px auto 0; border-radius: 50%;
+    border: 1.5px solid var(--accent); color: var(--accent); background: var(--card);
+    box-shadow: var(--shadow); text-decoration: none;
+    transition: background .15s, transform .15s;
+  }
+  .to-top:hover, .to-top:focus-visible { background: var(--accent-soft); transform: translateY(-2px); outline: none; }
+  .to-top svg { width: 20px; height: 20px; }
+
+  footer {
+    margin-top: 70px; padding-top: 30px; border-top: 1px solid var(--card-border);
+    color: var(--text-muted); font-size: 13.5px; text-align: center;
+  }
+
+  @media (max-width: 560px) {
+    header.hero h1 { font-size: 32px; }
+    .wrap { padding: 36px 16px 80px; }
+    table { font-size: 12.5px; }
+    .tabbar { gap: 8px; }
+    .tabgroup label { padding: 7px 13px; font-size: 13px; }
+    .orient .tile { width: 100%; }
+  }
+</style>
+</head>
+<body id="top">
+<div class="wrap">
+
+  <input type="radio" name="zone" id="zone-life" class="tab-input" checked>
+  <input type="radio" name="zone" id="zone-library" class="tab-input">
+  <input type="radio" name="view" id="view-cheat" class="tab-input" checked>
+  <input type="radio" name="view" id="view-idea" class="tab-input">
+
+  <header class="hero">
+    <div class="kicker">Life OS — a vault run together with an agent</div>
+    <h1>Handbook</h1>
+    <p class="lede">The page you open to recall something, not to learn how the system works — that's the short intro on <code>START-HERE.html</code>. Pick a zone, pick a view.</p>
+  </header>
+
+  <nav class="orient">
+    <a class="tile" href="START-HERE.html">
+      <span class="tag">Intro</span>
+      <span class="name">START-HERE.html</span>
+      <span class="desc">What this is, why it exists</span>
+    </a>
+    <div class="tile current">
+      <span class="tag">You are here</span>
+      <span class="name">HANDBOOK.html</span>
+      <span class="desc">Quick reference: commands, glossary, why it works this way</span>
+    </div>
+  </nav>
+  <p style="text-align:center; margin-top:-24px; margin-bottom:40px; font-size:13px; color:var(--text-muted);"><b>This tile doesn't click inside Obsidian</b> — its HTML Reader plugin forces every link into a dead new tab, and no click, Ctrl+click, or Cmd+click gets through. Press <code>Cmd/Ctrl+Shift+B</code> to open this page in your default browser instead — a QuickAdd macro, ships pre-configured in this vault, works from anywhere (not just while this file is active) — the tile works normally there.</p>
+
+  <div class="tabbar">
+    <div class="tabgroup zone-group">
+      <label for="zone-life" class="for-life">Life</label>
+      <label for="zone-library" class="for-library">Library</label>
+    </div>
+    <div class="tabgroup view-group">
+      <label for="view-cheat" class="for-cheat">Cheatsheet</label>
+      <label for="view-idea" class="for-idea">Idea</label>
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!-- ===================== LIFE — CHEATSHEET ===================== -->
+    <section id="panel-life-cheat" class="panel zone-life">
+      <span class="zone-chip">Life</span>
+
+      <section class="block">
+        <h2><span class="num">1</span> The loop in three moves</h2>
+        <p class="section-sub">Everything in <code>Life/</code> exists to support this cycle.</p>
+
+        <div class="diagram">
+          <svg viewBox="0 0 440 400" width="440" height="400">
+            <path class="loop-path" d="M 220,50 A 150,150 0 1 1 219,50" />
+            <circle class="loop-dot loop-anim" r="6" />
+            <g class="loop-node" transform="translate(220,50)">
+              <circle r="46" />
+              <text text-anchor="middle" y="-2">/morning</text>
+              <text class="sub" text-anchor="middle" y="14">shows the blocks</text>
+            </g>
+            <g class="loop-node" transform="translate(370,200)">
+              <circle r="46" />
+              <text text-anchor="middle" y="-2">work</text>
+              <text class="sub" text-anchor="middle" y="14">the blocks</text>
+            </g>
+            <g class="loop-node" transform="translate(220,350)">
+              <circle r="46" />
+              <text text-anchor="middle" y="-2">/evening</text>
+              <text class="sub" text-anchor="middle" y="14">closes the day</text>
+            </g>
+            <g class="loop-node" transform="translate(70,200)">
+              <circle r="46" />
+              <text text-anchor="middle" y="-2">/weekly</text>
+              <text class="sub" text-anchor="middle" y="14">once a week</text>
+            </g>
+          </svg>
+        </div>
+
+        <div class="card">
+          <ul class="steps">
+            <li><b>/morning</b> — today's calendar blocks and each one's minimum. Doesn't replan unless something actually changed.</li>
+            <li><b>Work the blocks.</b> Each carries a concrete minimum. Empty windows stay empty on purpose — not a gap to fill with busywork.</li>
+            <li><b>/evening</b> — an honest minimum-done verdict, tomorrow's plan in ~10 minutes, one factual entry appended to <code>Patterns/observation-log.md</code>.</li>
+          </ul>
+        </div>
+        <p class="note"><b>/weekly</b>, once a week: a short retrospective on the last seven days, then an interview about the week ahead — before anything gets scheduled.</p>
+        <p class="note">No fifth stop on this circle for capture — dropping a task or an idea happens continuously, any time, not on a schedule. Where each thing actually goes: <b>§2</b>, right below.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">2</span> How to get something onto your radar</h2>
+        <div class="card">
+          <table>
+            <tr><th>What</th><th>Goes to</th><th>How</th></tr>
+            <tr><td>A task</td><td><code>INBOX.md</code></td><td><code>⌛</code>how long, <code>📅</code>deadline, <code>#project</code>. Type <code>/today</code>/<code>/tomorrow</code>/<code>/DD-MM-YYYY</code> anywhere — turns into <code>⏳ YYYY-MM-DD</code>. New items append under the last section, <code>## To do</code> (also where <code>Cmd+Shift+A</code> quick-capture lands them).</td></tr>
+            <tr><td>An idea, not for now</td><td><code>roadmap/backlog.md</code></td><td>one line, reviewed at the end of a phase</td></tr>
+            <tr><td>Something worth reading/learning</td><td><code>Library/sources/inbox/</code></td><td>Web Clipper or <code>/source</code> — the one door from Life into Library, see the Library tab</td></tr>
+            <tr><td>Something personal, not a task</td><td><code>Notes/</code></td><td>by hand — yours, the agent won't write here unasked</td></tr>
+            <tr><td>A book/tool/show worth remembering</td><td><code>Resources/</code></td><td>tell the agent — <code>Recommendations.md</code> for consuming, <code>Tools.md</code> for software</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">3</span> The three commands</h2>
+        <div class="card">
+          <table>
+            <tr><th></th><th>What it does</th><th>When</th></tr>
+            <tr><td><code>/morning</code></td><td>Shows today's blocks + minimums, sets the tone</td><td>Start of the day</td></tr>
+            <tr><td><code>/evening</code></td><td>Closes the day, plans tomorrow, writes one Patterns entry</td><td>The keystone habit — end of every day, ~10 min</td></tr>
+            <tr><td><code>/weekly</code></td><td>Retrospective + an interview about next week, then blocking time</td><td>Once a week</td></tr>
+          </table>
+        </div>
+        <p class="note"><b>Then <code>/roadmap</code>.</b> It reads your avatar and offers 2–3 genuinely different roadmaps (what wins when things collide, the phases for the next ~3 months, the weekly hours) with a recommendation; you pick one, and it writes <code>roadmap-brief.md</code> section by section, showing each change first. Phases have a checkable definition of done and a date; priorities are one strict order, with protected time (sleep, family…) kept outside it; the <i>Now</i> section holds the current step and the weekly targets, which <code>/weekly</code> proposes to update each week. Run <code>/roadmap</code> again when a phase ends: it checks the definition of done criterion by criterion, goes through the backlog and opens the next phase. Refuses to run while John's sample data is still in the vault (offers to clear it).</p>
+        <p class="note"><b>Once, before the first <code>/morning</code>: <code>/avatar</code>.</b> A 20–25 minute interview — who you are, where you're heading, what you can do (skills, with evidence), your limits, how you actually work. It writes <code>Life/roadmap/avatar.md</code>, which the three commands and the Library read instead of guessing. On the first run it also offers to clear the sample person's (John's) data — to the system trash, nothing permanent, asked separately for Life and Library. It asks only what would change your priorities: relationships, family, health and exact money stay out unless you bring them up, and any question can be skipped. Run it again to update; it only walks the sections that changed.</p>
+        <p class="note">All three follow the same rule during planning: <b>you get options with a stated recommendation, not a silently-built plan and not an open "what do you want to do?"</b> The decision of what's <i>possible</i> is the agent's; the choice of what actually happens is yours.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">4</span> Things you click, not type</h2>
+        <div class="card">
+          <table>
+            <tr><th>Life OS Hub tab</th><th>What it's for</th></tr>
+            <tr><td>Overview</td><td>What's happening now, today's schedule, a task summary</td></tr>
+            <tr><td>Tasks</td><td>Full task management, written here directly — add, reorder, retag, drag dates. Not a read-only view of <code>INBOX.md</code>, a second way to edit it.</td></tr>
+            <tr><td>Metrics</td><td>Core hours, minimum-done rate, habit streaks</td></tr>
+            <tr><td>Inbox</td><td>The raw text of <code>INBOX.md</code>, editable inline — same file the Tasks tab edits, just unformatted</td></tr>
+            <tr><td>Status</td><td>Facts computed by code, not by feel: avatar age, days since the last <code>/weekly</code>, gaps in the daily loop, INBOX and Library queues. <b>Refresh</b> re-runs the status script, <b>Run scripts…</b> runs the configured list (status, Library lint) and shows each one's output — desktop app only; on a phone the tab shows the last snapshot.</td></tr>
+          </table>
+        </div>
+        <p class="note">The Status tab shows <code>System/status.json</code>, written by <code>System/scripts/vault-status.py</code> — the same script <code>/weekly</code> runs at the start, so they can't disagree. The buttons can only start a Python script inside <code>System/</code> or <code>Library/</code>, listed in the plugin's <code>data.json</code> (<code>scripts</code>), and show the exact command before running it.</p>
+        <p class="note">Colors (background, accent, card colours for the whole window) is vault-wide, not Life-specific — full detail in the <b>Vault-wide</b> section at the bottom of this page.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">5</span> Formats, at a glance</h2>
+        <div class="card">
+          <table>
+            <tr><th>What</th><th>Format</th></tr>
+            <tr><td>INBOX line</td><td><code>⌛1h 📅2026-10-01 ⏳2026-09-30 #project the actual task</code></td></tr>
+            <tr><td>Date shorthand</td><td><code>/today</code>, <code>/tomorrow</code>, <code>/DD-MM-YYYY</code> anywhere in the text — rendered into <code>⏳</code> on the next Hub render</td></tr>
+            <tr><td>Calendar block</td><td>a file with frontmatter in <code>Calendar/</code> — full spec: <code>Calendar/_README-format.md</code></td></tr>
+            <tr><td>Patterns entry</td><td>one per day in <code>observation-log.md</code>; promoted to <code>patterns.md</code> only on the 3rd repeat</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">6</span> What lives where</h2>
+        <div class="card">
+<pre><code>Life/
+├── CLAUDE.md              ← router: what's where, how to behave in this zone
+├── INBOX.md               ← task brain-dump, "To do" is the LAST section
+├── roadmap/
+│   ├── avatar.md          ← who you are (from /avatar) — yours after the first write
+│   ├── roadmap-brief.md   ← the constitution — sacred; written by /roadmap
+│   ├── roadmap-brief.previous.md ← one backup copy, made before each rewrite
+│   └── backlog.md         ← parked ideas, not for now
+├── Calendar/               ← blocks; source of truth for the calendar plugin
+├── Journal/                 ← daily notes: metrics (frontmatter) + journaling — sacred
+├── Patterns/
+│   ├── observation-log.md  ← raw, one entry a day
+│   └── patterns.md         ← confirmed only after 3 repeats
+├── Notes/                  ← your own free-form notes — sacred, hands off
+└── Resources/
+    ├── Recommendations.md  ← what to listen to / read / watch
+    └── Tools.md             ← software and configs to install</code></pre>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">7</span> Glossary</h2>
+        <div class="card">
+          <table>
+            <tr><th>Word</th><th>In plain terms</th></tr>
+            <tr><td><b>block</b></td><td>a scheduled chunk of time on the calendar</td></tr>
+            <tr><td><b>minimum</b></td><td>the concrete, checkable thing that has to be true for a block to count — not "work on X"</td></tr>
+            <tr><td><b>avatar.md</b></td><td>a description of you in the terms planning needs — field, goal, skills with a level and evidence, commitments, limits, how you work. Written by <code>/avatar</code>; it is the input to a roadmap, not the roadmap</td></tr>
+            <tr><td><b>roadmap-brief.md / "the constitution"</b></td><td>the one file read before any coaching or planning: context, priority order, phases, closed decisions</td></tr>
+            <tr><td><b>phase</b> / <b>definition of done</b></td><td>a stretch of the roadmap (about three months at a time) with one goal, and a definition of done (DoD) a stranger could check — a command that runs, an exam passed, a document sent — plus a target date. One phase is <code>active</code> at a time</td></tr>
+            <tr><td><b>protected time</b></td><td>what the plan never trades for a project — sleep, a day off, family. Written in the brief next to the priority order, not inside it</td></tr>
+            <tr><td><b>Now</b> (brief, section 6)</td><td>the current step, the weekly targets and the day-off rule — the one part of the brief <code>/weekly</code> may propose changes to</td></tr>
+            <tr><td><b>John</b></td><td>the made-up person whose sample data fills a fresh vault. <code>/avatar</code> clears it; <code>demo.py restore</code> brings it back</td></tr>
+            <tr><td><b>backlog.md</b></td><td>ideas parked out of your head, not meant for execution now</td></tr>
+            <tr><td><b>confirmed pattern</b></td><td>an observation promoted from the raw log to <code>patterns.md</code> only once it's shown up 3 separate times</td></tr>
+            <tr><td><b>sacred</b></td><td>content the agent won't touch without an explicit instruction — <code>Notes/</code>, journaling sections, filled frontmatter, <code>roadmap-brief.md</code>, and <code>avatar.md</code> once written</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">8</span> Situational cheatsheet: I want X → I do Y</h2>
+        <div class="card">
+          <table>
+            <tr><th>Situation</th><th>What you do</th></tr>
+            <tr><td>First time here, or your situation changed a lot</td><td><code>/avatar</code> (first run also clears John's demo data, after asking)</td></tr>
+            <tr><td>The avatar exists, but no plan yet — or a phase just ended</td><td><code>/roadmap</code></td></tr>
+            <tr><td>Want to see how the system is doing (avatar age, last <code>/weekly</code>, current phase)</td><td>the Hub's <b>Status</b> tab — <b>Refresh</b> on desktop</td></tr>
+            <tr><td>Want John's sample data back, or gone</td><td><code>python3 System/demo/demo.py restore</code> / <code>clear</code> — see <i>Vault-wide</i> below</td></tr>
+            <tr><td>Don't remember today's blocks</td><td><code>/morning</code></td></tr>
+            <tr><td>Day's done, or close to it</td><td><code>/evening</code></td></tr>
+            <tr><td>It's the weekly review moment</td><td><code>/weekly</code></td></tr>
+            <tr><td>A task just came to mind</td><td><code>INBOX.md</code> (<code>⌛📅#project</code>), the Tasks tab, or <code>Cmd+Shift+A</code></td></tr>
+            <tr><td>An idea, but not for now</td><td>one line in <code>roadmap/backlog.md</code></td></tr>
+            <tr><td>Found something worth reading later</td><td>Web Clipper / <code>/source</code> → <code>Library/sources/inbox/</code></td></tr>
+            <tr><td>Something personal, not a task</td><td><code>Life/Notes/</code>, by hand</td></tr>
+            <tr><td>Want a book/tool/show remembered</td><td>tell the agent — <code>Resources/</code></td></tr>
+            <tr><td>Forgot what's actually the priority</td><td><code>roadmap/roadmap-brief.md</code></td></tr>
+            <tr><td>Think you've spotted a real pattern</td><td>check <code>Patterns/patterns.md</code> — needs 3 log entries first</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">9</span> What NOT to do</h2>
+        <div class="card">
+          <ul class="plain">
+            <li>Don't expect an empty calendar window to get filled with busywork — empty is deliberate.</li>
+            <li>Don't ask for a whole week planned silently. Day/week planning is always options with a stated recommendation; you choose.</li>
+            <li>Don't treat a declared time estimate as accurate by default — it gets compared against what actually happened.</li>
+            <li>Don't fill in your own habit checklist for the agent, or expect the agent to fill it for you — that tracker has to measure <i>you</i>, not the agent's judgment of you.</li>
+            <li>Don't touch <code>Notes/</code>, journaling sections, or <code>roadmap-brief.md</code> expecting the other side to follow along silently — sacred runs both ways.</li>
+            <li>Don't call something a confirmed pattern after it happened once — the threshold is 3, and it's hard.</li>
+            <li>Don't start a new project because it seems useful. An idea goes to <code>backlog.md</code>, not into the current block.</li>
+            <li>Don't ask the agent to count a definition of done as met because it's "mostly there". The verdict follows the facts you give; a new fact changes it, pushing doesn't.</li>
+            <li>Don't <code>git add -f</code> your avatar, journal or notes into a public repo — they're ignored on purpose (see <i>Vault-wide</i>).</li>
+          </ul>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- ===================== LIFE — IDEA ===================== -->
+    <section id="panel-life-idea" class="panel zone-life">
+      <span class="zone-chip">Life</span>
+
+      <section class="block">
+        <h2><span class="num">1</span> The idea: one place, run by an agent</h2>
+        <p>Most productivity setups make <b>you</b> the maintainer: you build the databases and templates in Notion or a dozen apps, keep them tidy, remember to review them, and decide every day what to do next. The system becomes one more project, and it gets dropped like the others. This vault starts from the opposite end: <b>one place for the running of your life, and an agent that does the running.</b> You don't design a system. You're interviewed once about who you are and where you're heading, and from then on the agent plans from what it knows, keeps the calendar, inbox and journal in order, triages, writes the factual record, compiles what you learn, and tells you what's due and what's slipping. You do the living: show up, report honestly, choose between the options it offers, write your own journal.</p>
+        <p>"Your whole life" means four things in one folder of plain markdown, no app-to-app glue: <b>what you're doing</b> (calendar blocks with minimums, an inbox), <b>where you're heading</b> (avatar and roadmap), <b>how it's going</b> (journal and patterns), <b>what you know</b> (the Library). It doesn't replace specialised tools like your bank or medical records — it's where you decide and track what you do with your time and goals.</p>
+        <p>Projects get dropped. Not from lack of ideas — from the accumulation of small, unglamorous bookkeeping: what was the plan again, did yesterday actually go the way it felt like it went, is this really a pattern or just one bad day dressed up as insight. This vault exists to carry that bookkeeping so the load on you doesn't compound. <b>It has to work, not become another project that gets dropped.</b></p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">2</span> The mechanism, in five sentences</h2>
+        <p>Every block on the calendar carries a <b>minimum</b> — a concrete, checkable thing, not a vague intention. <code>/evening</code> renders an honest verdict on whether that minimum actually happened, and that verdict is the agent's call, not a self-grade. A single good or bad day never gets to redefine what's true about you — an observation only becomes a <b>pattern</b> after showing up three separate times in the raw log. A written <b>roadmap-brief</b> settles priority order once, so it isn't re-litigated from scratch every time two things collide. None of this replaces your judgment — it just stops the same small decisions from having to be remade, exhausted, every single day.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">3</span> What actually moves through Life</h2>
+        <p class="section-sub">Not folders — the three time horizons everything in this zone sorts into.</p>
+        <div class="card">
+          <table>
+            <tr><th>Horizon</th><th>Here</th><th>What it's for</th></tr>
+            <tr><td><b>Who you are</b></td><td><code>roadmap/avatar.md</code></td><td>field, goal, skills with evidence, commitments, limits, how you work — written once by an interview, the input everything below is planned from</td></tr>
+            <tr><td><b>Standing</b></td><td><code>roadmap/roadmap-brief.md</code></td><td>the constitution — phases with a checkable definition of done, priority order settled once, closed decisions, and a <i>Now</i> section for the current step</td></tr>
+            <tr><td><b>Right now</b></td><td><code>INBOX.md</code> + <code>Calendar/</code></td><td>capture (anything, unsorted, zero friction) turns into blocks (scheduled, each with a minimum)</td></tr>
+            <tr><td><b>Looking back</b></td><td><code>Journal/</code> + <code>Patterns/</code></td><td>the daily record, and what it earns — a confirmed pattern — after showing up three times</td></tr>
+          </table>
+        </div>
+        <p class="note"><code>Notes/</code> and <code>Resources/</code> sit outside this mechanism on purpose — one is yours alone (§5), the other is a log of outside recommendations, not something the loop runs on.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">4</span> Your role and the agent's</h2>
+        <p><b>You:</b> show up to the blocks, report what actually happened, honestly. Choose between the options offered during planning — the choice is always yours. Push back when a verdict feels wrong, with a fact the agent didn't already have — not just by disagreeing.</p>
+        <p><b>The agent:</b> proposes options with a stated recommendation, never a silently pre-built plan. States the declared minimum before judging whether it was met. Keeps the honest-verdict call itself — a string of small wins on a day one priority got skipped is exactly the read that lets projects slide, so it doesn't hand that judgment back to you to grade yourself. Writes to <code>Patterns/</code> twice a day (open and close), and only promotes an observation to a confirmed pattern on the third repeat, never the first.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">5</span> What's sacred, and why</h2>
+        <p><code>Notes/</code>, the journaling sections in <code>Journal/</code>, filled-in frontmatter values, <code>avatar.md</code> and <code>roadmap-brief.md</code> are never rewritten without an explicit instruction — <code>/avatar</code> and <code>/roadmap</code> write them by design, and <code>/weekly</code> may change section 6 of the brief, only after you confirm. Self-tracking data and personal reflection lose their entire point the moment someone else can quietly edit them — a habit streak the agent could pad isn't a real streak, and a journal entry it could clean up isn't an honest one.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">6</span> How this connects to Library</h2>
+        <p>The bridge runs one way: <code>/morning</code>, <code>/evening</code>, and <code>/weekly</code> may drop a file into <code>Library/sources/inbox/</code> and touch nothing else in Library. That's deliberate — compiling a source mid-block turns a ten-minute check-in into a forty-minute detour. The Library pipeline reads <code>roadmap-brief.md</code> and <code>avatar.md</code> for context but never writes back into <code>Life/</code>. Two different jobs, kept from bleeding into each other.</p>
+      </section>
+
+    </section>
+
+    <!-- ===================== LIBRARY — CHEATSHEET ===================== -->
+    <section id="panel-library-cheat" class="panel zone-library">
+      <span class="zone-chip">Library</span>
+      <p class="note">Three files remain separate from this page: <code>SCHEMA.md</code> (rules, for the agent — skip it), <code>CAPTURE.md</code> (full Clipper/config setup), <code>INDEX.md</code> (the catalog of every page, mostly read by the agent). What used to be <code>CHEATSHEET.md</code> and <code>IDEA.md</code> now lives here, as this page's Library tab.</p>
+
+      <section class="block">
+        <h2><span class="num">1</span> The whole Library is three actions</h2>
+        <div class="diagram">
+          <svg viewBox="0 0 620 70" width="620" height="70">
+            <line class="pipe-arrow-bg" x1="20" y1="35" x2="598" y2="35" />
+            <line class="pipe-arrow-flow" x1="20" y1="35" x2="592" y2="35" />
+            <g class="pipe-node" transform="translate(20,10)">
+              <rect width="160" height="50" />
+              <text x="80" y="24" text-anchor="middle">DROP IT</text>
+              <text class="sub" x="80" y="40" text-anchor="middle">a second</text>
+            </g>
+            <g class="pipe-node" transform="translate(230,10)">
+              <rect width="160" height="50" />
+              <text x="80" y="24" text-anchor="middle">COMPILE</text>
+              <text class="sub" x="80" y="40" text-anchor="middle">you trigger</text>
+            </g>
+            <g class="pipe-node" transform="translate(440,10)">
+              <rect width="160" height="50" />
+              <text x="80" y="24" text-anchor="middle">ASK</text>
+              <text class="sub" x="80" y="40" text-anchor="middle">whenever</text>
+            </g>
+          </svg>
+        </div>
+        <p><b>Dropping is free and automatic.</b> Click and go back to what you were doing. Nothing to describe, tag, or think about.</p>
+        <p><b>Compiling does NOT happen by itself.</b> Ever. You trigger it consciously, when you have 20–40 minutes for it — letting other people's web pages into the base without looking is an open door for prompt injection.</p>
+        <p><b>Asking is the reward for the other two.</b> That's when the base gives back what you put into it.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">2</span> How to add something to the queue</h2>
+        <p class="section-sub">Every path ends up in <code>Library/sources/inbox/</code>, and waits there until you compile it. Full setup: <code>CAPTURE.md</code>.</p>
+        <div class="card">
+          <table>
+            <tr><th>Way</th><th>When</th><th>How</th></tr>
+            <tr><td><b>Web Clipper</b> (browser)</td><td>The main path — a video, article, repo, thread, docs page</td><td>one browser shortcut</td></tr>
+            <tr><td><code>/note</code></td><td>mid-coding, something just clicked</td><td><code>/note why .extend() added the item to both lists</code></td></tr>
+            <tr><td><code>/source</code></td><td>you have text on the clipboard, not a web page</td><td><code>/source</code> + paste</td></tr>
+            <tr><td>manually</td><td>you already have an <code>.md</code> file</td><td>drop it into <code>Library/sources/inbox/</code></td></tr>
+          </table>
+        </div>
+        <p class="note"><b>Rule: don't describe anything while dropping it.</b> The one exception is the Clipper's <code>TOPIC</code> field — fill it in only when you already know the topic on sight; otherwise leave it blank.</p>
+        <details>
+          <summary>Setting up the Web Clipper (browser extension)</summary>
+          <p>The main way anything from the web — an article, a video transcript, a docs page, a thread — gets into <code>Library/sources/inbox/</code>. It's a <b>browser extension</b>, installed separately from anything <code>install-plugins.py</code> touches (that script only manages Obsidian plugins, not your browser).</p>
+          <ol>
+            <li>Install the official <b>Obsidian Web Clipper</b> extension (search your browser's extension store — Chrome, Firefox, and Chromium-based browsers are all supported).</li>
+            <li>In the extension's settings, pick this vault, then set <b>note location</b> to <code>Library/sources/inbox</code>. This is the one step that actually matters — by default the extension targets a generic clippings folder that nothing here ever compiles.</li>
+            <li>Don't touch the clip template, don't tag or describe anything while clipping — a clip should be one click, nothing else.</li>
+          </ol>
+          <p>It works on the page as already rendered, so it also handles SPAs, JS, and a full YouTube transcript with timestamps — no separate download tool needed. If a page won't clip (paywall, a broken SPA), that's the extension's own limitation — paste the text with <code>/source</code> instead.</p>
+        </details>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">3</span> The <code>/library</code> command — four modes</h2>
+        <div class="card">
+          <table>
+            <tr><th></th><th>What it does</th><th>When</th></tr>
+            <tr><td><code>/library</code></td><td>Status — how many sources are queued, how many pages exist, what happened most recently. Cheap.</td><td>Sitting down, don't remember where you left off</td></tr>
+            <tr><td><code>/library ingest</code></td><td>Takes <b>one</b> source from the queue, breaks it down, weaves it into the wiki</td><td>You have 20–40 minutes — <i>not</i> mid-work-block</td></tr>
+            <tr><td><code>/library &lt;question&gt;</code></td><td>Reads wiki pages (not raw sources), answers with a citation for every claim</td><td>You know you looked into this before</td></tr>
+            <tr><td><code>/library lint</code></td><td>Health check — dead links, orphans, missing sources, stale pages</td><td>Every so often, or when something looks off</td></tr>
+          </table>
+        </div>
+        <p class="note"><b>Always ONE file at a time on ingest, and you can always stop.</b> There's no "compile everything for me" mode — the agent asks after every source.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">4</span> Running an ingest, step by step</h2>
+        <p class="section-sub">Ingest is always manual, always one file at a time — there's no automatic trigger on a hook.</p>
+        <div class="diagram">
+          <svg viewBox="0 0 710 60" width="710" height="60">
+            <defs>
+              <marker id="arrowhead" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+                <path d="M0,0 L6,3 L0,6 Z" fill="var(--card-border)" />
+              </marker>
+            </defs>
+            <line class="pipe-arrow-bg" x1="20" y1="30" x2="598" y2="30" />
+            <line class="pipe-arrow-flow" x1="20" y1="30" x2="592" y2="30" />
+            <g class="pipe-node" transform="translate(20,10)"><rect width="120" height="40" /><text x="60" y="25" text-anchor="middle">Capture</text></g>
+            <g class="pipe-node" transform="translate(190,10)"><rect width="120" height="40" /><text x="60" y="25" text-anchor="middle">/library</text></g>
+            <g class="pipe-node" transform="translate(360,10)"><rect width="190" height="40" /><text x="95" y="25" text-anchor="middle">wiki + INDEX + log</text></g>
+            <g class="pipe-node" transform="translate(600,10)"><rect width="90" height="40" /><text x="45" y="25" text-anchor="middle">lint</text></g>
+          </svg>
+        </div>
+        <div class="card">
+          <ul class="steps">
+            <li>Check what's waiting: <code>ls Library/sources/inbox/</code>.</li>
+            <li>Ask the agent to run <code>/library</code> (or say "ingest the next file in the queue").</li>
+            <li>The agent reads the source, decides what's a real mechanism worth its own wiki page versus what's just a pointer, writes or updates pages, wires new ones into their folder's MOC, updates <code>INDEX.md</code> and <code>log.md</code>, then moves the source out of <code>inbox/</code> into the matching archive folder — never edits its content.</li>
+            <li>Run the linter: <code>python3 Library/lint.py</code> (Windows: <code>py Library/lint.py</code>). Exit code <code>1</code> means something needs fixing. <code>--fix</code> auto-corrects staleness flags; everything else you fix by hand.</li>
+          </ul>
+        </div>
+        <p class="note">A big queue with nothing getting ingested is itself useful information — it usually means there isn't currently time for this part of the loop, and that's fine to leave as-is rather than rush.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">5</span> Adding a book</h2>
+        <div class="card">
+          <ul class="steps">
+            <li>Drop the PDF into <code>Library/books/&lt;Title&gt;/</code>.</li>
+            <li>Open the <b>Book</b> tab in Life OS Hub, pick the PDF from the list.</li>
+            <li>Each reading block creates or appends to one file per day: <code>Library/books/&lt;Title&gt;/YYYY-MM-DD — &lt;Title&gt;.md</code>, with <i>Reading notes</i>, <i>What I learned</i>, and <i>Mind map</i> sections.</li>
+            <li>Use the built-in timer (15/30/45 minutes) so a session has a natural end instead of trailing off.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">6</span> Things you click, not type</h2>
+        <div class="card">
+          <table>
+            <tr><th>Life OS Hub tab / file</th><th>What it's for</th></tr>
+            <tr><td><b>Wiki</b> tab</td><td>Search across pages, plus mouse-driven management — status, move, trash, <code>＋ new draft</code>. The plugin only touches metadata and location; the agent writes content — the scopes never overlap.</td></tr>
+            <tr><td><b>Book</b> tab</td><td>15-minute reading timer, dictates straight into a book-session file — see §5 above</td></tr>
+            <tr><td><code>wiki.base</code></td><td>a clickable table of every page — four views: Everything, By kind, <b>Needs attention</b>, Concepts</td></tr>
+          </table>
+        </div>
+        <p class="note">Colors (background, accent, card colours for the whole window) is vault-wide, not Library-specific — full detail in the <b>Vault-wide</b> section at the bottom of this page.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">7</span> Terminal scripts (rarely, but good to know)</h2>
+        <div class="card">
+<pre><code># Windows: `py` instead of `python3`
+python3 Library/lint.py              # report: what's broken
+python3 Library/lint.py --fix        # + flag stale pages
+python3 Library/lint.py --links      # + suggested cross-links to insert
+python3 Library/lint.py --recompute  # recompute hashes (done automatically after an ingest)</code></pre>
+        </div>
+        <p class="note">You'd reach for this yourself practically never — it runs as part of <code>/library lint</code>. But <code>python3 Library/lint.py</code> alone is free and instant if you just want to check health without spending tokens.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">8</span> Two automations that run by themselves</h2>
+        <div class="card">
+          <ul class="plain">
+            <li><b>Write block on <code>sources/</code></b> — raw material is untouchable. The agent can only move a file from <code>inbox/</code> to the archive, never change what you dropped.</li>
+            <li><b>Check on a freshly written page</b> — metadata, length limit, and presence of sources, immediately after a save.</li>
+          </ul>
+        </div>
+        <p class="note">If you see a message from the hook on stderr — that's not a malfunction, a rule fired and there's something to fix.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">9</span> Glossary</h2>
+        <div class="card">
+          <table>
+            <tr><th>Word</th><th>In plain terms</th></tr>
+            <tr><td><b>atom</b></td><td>one wiki page about one thing</td></tr>
+            <tr><td><b>MOC</b></td><td><b>map of a topic</b> — the page that ties a whole folder together. A page outside a MOC is effectively invisible.</td></tr>
+            <tr><td><code>concept</code></td><td>one idea — a language feature, a metric</td></tr>
+            <tr><td><code>entity</code></td><td>a specific thing, person, tool, company</td></tr>
+            <tr><td><code>procedure</code></td><td>how to do something step by step; allowed to run longer</td></tr>
+            <tr><td><code>source</code></td><td>a 1:1 summary of one file you dropped</td></tr>
+            <tr><td><code>_catalog.md</code></td><td>a dumping ground for bare pointers — no content yet; grows into its own page later</td></tr>
+            <tr><td><b>source-count</b></td><td>how many independent sources confirm this. 1 = claimed. 2+ = confirmed.</td></tr>
+            <tr><td><code>status: disputed</code></td><td>two sources disagree, deliberately not averaged out</td></tr>
+            <tr><td><code>status: stale</code></td><td>the source changed since ingest — the script sets this, not the agent</td></tr>
+            <tr><td><code>[TODO: ...]</code></td><td>a known gap — better than plausible-sounding filler</td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">10</span> What lives where</h2>
+        <div class="card">
+<pre><code>Library/
+├── CLAUDE.md       ← router: what's where, how to behave in this zone
+├── SCHEMA.md       ← the rules (for the agent)
+├── CAPTURE.md      ← how to drop things in, with Clipper config
+├── INDEX.md        ← list of every page, one line per page
+├── log.md          ← chronicle: what was compiled and when
+├── wiki.base       ← a clickable table
+├── lint.py         ← the health check
+├── sources/
+│   ├── inbox/      ← QUEUE. Everything dropped lands here
+│   └── (archive: articles/, transcripts/, docs/, reddit/, ...)
+└── wiki/
+    ├── _catalog.md ← pointers with no content yet
+    ├── hot.md      ← a snapshot: what state the base is in right now
+    └── &lt;topic&gt;/     ← git/, python/, apis-and-networking/, ...
+        └── &lt;topic&gt;-moc.md   ← MAP OF THE TOPIC, start here</code></pre>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">11</span> Situational cheatsheet: I want X → I say Y</h2>
+        <div class="card">
+          <table>
+            <tr><th>Situation</th><th>What you do</th></tr>
+            <tr><td>Found a good video/article</td><td>Web Clipper, one click</td></tr>
+            <tr><td>Understood something while coding</td><td><code>/note &lt;what about&gt;</code></td></tr>
+            <tr><td>Have pasted text</td><td><code>/source</code></td></tr>
+            <tr><td>Don't remember where I left off</td><td><code>/library</code></td></tr>
+            <tr><td>Have time, want to work the queue</td><td><code>/library ingest</code></td></tr>
+            <tr><td>Know I looked into this before</td><td><code>/library &lt;question&gt;</code></td></tr>
+            <tr><td>Want to see what's weak</td><td><code>wiki.base</code> → "Needs attention"</td></tr>
+            <tr><td>Something looks broken</td><td><code>/library lint</code></td></tr>
+            <tr><td>Want to start a topic from zero</td><td>open <code>&lt;topic&gt;-moc</code> in the folder</td></tr>
+            <tr><td>Want to see every page</td><td><code>INDEX.md</code></td></tr>
+          </table>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">12</span> What NOT to do</h2>
+        <div class="card">
+          <ul class="plain">
+            <li>Don't edit files in <code>sources/</code>. Raw material is immutable — the hook blocks it, but don't even try.</li>
+            <li>Don't run two sessions writing to <code>wiki/</code> at once — the conflict is semantic, git won't catch it.</li>
+            <li>Don't ask for "compile the whole queue for me." One file at a time is deliberate — you review each result while you still remember the source.</li>
+            <li>Don't delete the "What's not here yet" section from a MOC — that's the list of gaps, the most valuable part of the map.</li>
+            <li>Don't raise the length limits when lint complains. Too long means two topics in one page — split it.</li>
+          </ul>
+        </div>
+      </section>
+
+    </section>
+
+    <!-- ===================== LIBRARY — IDEA ===================== -->
+    <section id="panel-library-idea" class="panel zone-library">
+      <span class="zone-chip">Library</span>
+
+      <section class="block">
+        <h2><span class="num">1</span> The problem this solves</h2>
+        <p class="note">The Library is the <i>what you know</i> part of the one place this vault is meant to be — so what you learn doesn't live in a different app from what you plan.</p>
+        <p>You learn something while working. You understand it. A month later it's nowhere — it stayed in a chat with an LLM, in a browser tab, or in a transcript you'll never revisit.</p>
+        <p>The standard fix is <b>RAG</b>: dump files in, and the model re-searches them from scratch on every question. The problem: <b>nothing accumulates.</b> Ask the same question again in a month and the model digs through the same files from zero, again.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">2</span> Karpathy's idea, in five sentences</h2>
+        <p>Instead of searching raw files on every question, <b>compile them once</b> into a set of linked markdown pages and then <b>maintain</b> them. The cross-links already exist. Contradictions are already flagged. The next source doesn't land beside what's there — it gets <b>woven into</b> it.</p>
+        <p>The point worth remembering: the tedious part of a knowledge base isn't reading or thinking, it's the bookkeeping — and that cost is exactly what an LLM doesn't get tired of paying. That's the same abandonment pattern the whole vault exists to fight — just moved onto a wiki.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">3</span> Three layers, nothing more</h2>
+        <div class="card">
+          <table>
+            <tr><th>Layer</th><th>Here</th><th>Who writes</th></tr>
+            <tr><td><b>Raw sources</b></td><td><code>Library/sources/</code> + <code>Life/Notes/</code>, <code>books/</code></td><td><b>You.</b> The agent reads, never changes</td></tr>
+            <tr><td><b>Wiki</b></td><td><code>Library/wiki/</code></td><td><b>The agent.</b> You read and judge</td></tr>
+            <tr><td><b>Schema</b></td><td><code>Library/SCHEMA.md</code></td><td><b>Together</b>, deliberately</td></tr>
+          </table>
+        </div>
+        <p>Three operations: <b>ingest</b> (drop a source, it gets broken down and woven in), <b>query</b> (ask, get a cited answer from the wiki), <b>lint</b> (a script checks health). Two navigation files: <code>INDEX.md</code> and <code>log.md</code>. <b>That's the whole implementation — zero lines of code.</b></p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">4</span> An early decision that got reversed</h2>
+        <p>An earlier version decided pages should be <b>immutable</b> — never rewrite one, always create a new one with a <code>supersedes</code>/<code>refines</code> relation. The trigger question: <i>"what if the sources overlap — don't things end up duplicated?"</i></p>
+        <p><b>With immutable pages — yes, unavoidably.</b> A second source about the same tool has to make a second page about the same thing. Cleanup needs version chains and a consolidation command — exactly the machinery an earlier plan already predicted.</p>
+        <p><b>With mutable pages, the problem doesn't arise.</b> A second source lands on the existing page, <code>source-count</code> goes 1→2. Overlap stops being a threat and becomes a signal: "confirmed twice, not just claimed once." What protects you instead: <b>git.</b> <code>wiki/</code> is in the repo — every write is reversible with <code>git checkout</code>, on the one hard condition that there's a commit after every ingest. <b>The system got smaller, not bigger.</b></p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">5</span> What happens on "ingest" — one real example</h2>
+        <div class="card">
+          <ul class="steps">
+            <li><b>The source lands untouched</b> in <code>sources/</code>, exactly as it arrived.</li>
+            <li><b>It gets read and candidates get listed.</b> Every candidate needs a quote from the source — no quote, it's out. The guard against inventing things the material never said.</li>
+            <li><b>Pages get written.</b> A topic folder appears in <code>wiki/</code>, each page answering exactly one question.</li>
+            <li><b>It gets woven into what's already there.</b> An existing note on the same subject gets a <code>refines:</code> field pointing at it — your note stays untouched, new pages hang underneath.</li>
+            <li><b><code>INDEX.md</code> and <code>log.md</code></b> get an entry, so it can be found and dated.</li>
+            <li><b>Lint runs</b> — every page needs a source, dead links and orphans get flagged.</li>
+          </ul>
+        </div>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">6</span> How this sits on top of the rest of the vault</h2>
+        <p>The vault holds real quantities of knowledge that live nowhere compiled: full chat checkpoints, programming notes, reading conclusions, course material. <b>None of it needs to move or get deleted.</b> Those files stay exactly where they are — that's the source layer. The agent only reads them and builds pages <i>alongside</i> them in <code>wiki/</code>.</p>
+        <p>What the agent never touches: <code>Life/Journal/</code>, <code>Life/Calendar/</code>, <code>Life/Patterns/</code>, <code>Life/roadmap/</code>. That's the day-to-day operating system, not knowledge.</p>
+      </section>
+
+      <section class="block">
+        <h2><span class="num">7</span> Your role and the agent's</h2>
+        <p><b>You:</b> choose what goes in. Judge whether a page captures why you saved the source. Say "too shallow" or "too much." Ask questions.</p>
+        <p><b>The agent:</b> reads, breaks down, writes pages, maintains cross-links, keeps the index and the chronicle, runs lint. Never changes your notes, deletes sources, writes to <code>Life/Journal/</code> or <code>Life/Calendar/</code>, or compiles without your command.</p>
+      </section>
+
+    </section>
+
+  </div>
+
+  <section class="block">
+    <h2>Vault-wide, not zone-specific</h2>
+    <p class="section-sub">A few things that don't belong to Life or Library specifically.</p>
+
+    <details>
+      <summary>The Overview banner picture (Life OS Hub)</summary>
+      <p>The Overview tab can show an image behind the header. The repo ships without one, since it would have to be generic or someone else's art. Two ways to set it:</p>
+      <ul>
+        <li><b>Drag a picture straight onto the empty banner.</b> Life OS Hub saves it, names it and shows it immediately — nothing to configure. Drag another one onto it later and it replaces the old one the same way: the current pictures live in <code>System/Attachments/banners/</code>, and a replaced one isn't deleted but moves to <code>System/Attachments/old-banners/</code> as <code>dark mode 1</code>, <code>dark mode 2</code>, … (an identical picture is never archived twice). Everything in <code>System/Attachments/</code> is git-ignored.</li>
+        <li><b>Or drop the file anywhere in the vault</b> with <b>"dark mode"</b> or <b>"light mode"</b> somewhere in the filename — gif, png, jpg, webp or avif, any dimensions. Life OS Hub finds it within a second, no restart; the newest matching file wins.</li>
+      </ul>
+      <p>Crop position is tunable per mode in Style Settings → Life OS Hub → banner, for when your picture's focal point isn't centred.</p>
+    </details>
+
+    <details>
+      <summary>The Colors tab, in full (Life OS Hub)</summary>
+      <p><b>Background</b> at the top sets what's behind everything, separately for dark and light mode: <b>Solid</b>, or <b>Gradient</b> (two to four colours, drag the angle, <b>Reverse</b> flips the order), with a live preview. <b>Glows</b> add soft spots of colour on top (position, size, strength); the <b>Aurora preset</b> loads the theme's own look so you can tweak it. <b>Theme</b> brings back the theme's own gradient.</p>
+      <p>Below it, click a swatch to copy its hex. Under <b>From your banner</b>, <b>Use as accent</b> sets the accent from that colour. To change a colour by hand, use the picker or type a hex; <b>Reset</b> returns it to the Style Settings (or theme) value. Colours changed here override Style Settings and show an <i>overridden</i> badge. Theme colours (Obsidian's own) are view-only until you tick <b>Advanced</b>, where <b>Reset all</b> clears every theme override.</p>
+      <p>A contrast warning appears when text or accent drops below 4.5:1 against the background; nothing is changed automatically.</p>
+    </details>
+
+    <details>
+      <summary>The sample person (John): clear him, bring him back</summary>
+      <p>A fresh vault ships with a made-up person's data — John's calendar, journal, notes, roadmap brief and a small wiki — so the Hub shows something on first open. <code>/avatar</code> offers to clear it on the first run, and <code>/roadmap</code> refuses to write next to it. You can also run the script yourself; every command is a dry run until you add <code>--apply</code>:</p>
+      <pre><code># Windows: py instead of python3
+python3 System/demo/demo.py clear                          # dry run: prints the plan
+python3 System/demo/demo.py clear --apply                  # John's files go to the system trash
+python3 System/demo/demo.py clear --apply --keep-library   # clear Life/, keep the sample Library
+python3 System/demo/demo.py restore                        # dry run: what of John is missing
+python3 System/demo/demo.py restore --apply                # write back only what is missing</code></pre>
+      <p><b>Clear</b> touches only files that are still John's: anything you changed is left alone and reported, so your own journal entries survive. Nothing is deleted for good — the files sit in the system trash. Empty placeholders replace INBOX, the brief and the Patterns files, so the plugins and commands keep finding them. <b>Restore</b> only adds what's missing (delete one John file and only that one returns), never overwrites, matches the dates to what's already there, and refuses while <code>avatar.md</code> exists — <code>--mix</code> overrides that. <code>--replace-stubs</code> swaps an empty placeholder for John's version. The marker <code>System/demo/.demo-active</code> lists which parts (<code>life</code>, <code>library</code>) are still in the vault.</p>
+    </details>
+
+    <details>
+      <summary>Privacy: what git ignores on purpose</summary>
+      <p><code>avatar.md</code>, the roadmap brief (and its <code>.previous</code> copy), <code>backlog.md</code>, <code>INBOX.md</code>, <code>Journal/</code>, <code>Notes/</code>, the two <code>Patterns/</code> files and everything in <code>System/Attachments/</code> (photos and images you paste into notes, the Hub's banner pictures) are in <code>.gitignore</code>. They're the most personal things in the vault, and a fork pushed to a public repo would otherwise publish them. Only <code>System/Attachments/.gitkeep</code> stays tracked, so the folder exists on a fresh clone. The template ships John's versions already tracked; after you clear him, git drops what is left of them from its index (the files stay on disk). If you want one in a <i>private</i> repo: <code>git add -f &lt;file&gt;</code>. The trade-off is real: git no longer backs these files up for you.</p>
+    </details>
+
+    <details>
+      <summary>Facts by code: the status script and the scripts button</summary>
+      <pre><code>python3 System/scripts/vault-status.py                # print the checks
+python3 System/scripts/vault-status.py --write        # ...and save System/status.json
+python3 System/scripts/vault-status.py --json         # JSON instead of text
+python3 System/scripts/vault-status.py --record weekly   # note that /weekly ran today</code></pre>
+      <p>It checks the avatar's age, days since the last <code>/weekly</code>, gaps in the daily Patterns entries, the INBOX and Library queues, whether the active phase is past its target date, and whether John is still in the vault. <code>/weekly</code> runs it first and says each <code>WARN</code> in a sentence; the Hub's Status tab shows the saved snapshot, and its <b>Refresh</b> and <b>Run scripts…</b> buttons (desktop only) re-run it. The thresholds live at the top of the script — one place. <code>System/status.json</code> and <code>System/runs.json</code> are generated and git-ignored.</p>
+    </details>
+
+    <details>
+      <summary>Opening .html files in a real browser</summary>
+      <p>Obsidian's HTML Reader plugin sandboxes every <code>.html</code> file it opens — it forces every link inside one into a new tab that its own sandboxed view then ignores, so nothing in this page, <code>START-HERE.html</code>, or any other <code>.html</code> you drop into the vault actually clicks. No click, Ctrl+click, or Cmd+click gets through, and there's no fix on the page side that doesn't mean running arbitrary JavaScript on every <code>.html</code> file in the vault by default — not something worth trading away for link-clicking.</p>
+      <p>Instead: <b><code>Cmd/Ctrl+Shift+B</code></b> opens the active <code>.html</code> file in your real default browser, where every link works normally. It's a small QuickAdd macro (<code>System/scripts/quickadd-open-in-browser.js</code>, choice "🌐 Open in browser"), not a native Obsidian feature — Obsidian's own built-in <i>Open in default app</i> command exists too, but only fires when the file is already the active pane, so it couldn't be triggered from anywhere. This one can: press it from any tab, on any <code>.html</code> file, and it opens that file; press it with nothing <code>.html</code> active and it opens <code>HANDBOOK.html</code> instead of doing nothing.</p>
+      <p>Ships pre-configured — no browser path to set, no per-user setup, works on Windows and macOS alike (<code>Mod</code> resolves to Ctrl or ⌘). If it stops responding after editing the macro's script, QuickAdd needs a reload to pick it up: disable and re-enable the plugin, or restart Obsidian.</p>
+    </details>
+
+    <details>
+      <summary>On Windows</summary>
+      <ul>
+        <li>Python is <code>py</code>, not <code>python3</code>: <code>py Library/lint.py</code>, <code>py System\scripts\install-plugins.py</code>.</li>
+        <li><code>AGENTS.md</code>, the zones' <code>.claude/settings.json</code>, <code>.agents/</code> and <code>.codex/skills/</code> are copies here, not symlinks. After you edit a <code>CLAUDE.md</code>, a skill, or a command, run <code>py System\scripts\setup-symlinks.py</code> so the copies catch up.</li>
+        <li>Integrated terminal in Obsidian (Terminal plugin): install <code>py -m pip install psutil pywinpty</code> once.</li>
+      </ul>
+    </details>
+
+    <details>
+      <summary>Undoing changes with git</summary>
+      <p>This vault is version-controlled — git is your only safety net, since nothing here syncs automatically between devices.</p>
+      <pre><code>git log --oneline -20                       # recent restore points
+git log --oneline -- "Life/INBOX.md"         # history of one file</code></pre>
+      <pre><code>git restore "Life/INBOX.md"    # discard uncommitted changes to one file
+git restore .                  # discard ALL uncommitted changes — no undo after this</code></pre>
+      <pre><code>git show &lt;commit&gt;:"Life/INBOX.md"                    # preview an old version, prints to terminal
+git restore --source=&lt;commit&gt; "Life/INBOX.md"         # restore just that one file from an old commit</code></pre>
+      <p>Always preview with <code>git show</code> before restoring — it's the only one of these that can't hurt anything. Commit as often as you can stand to: nothing you haven't committed can be recovered if you overwrite it later.</p>
+    </details>
+  </section>
+
+  <a class="to-top" href="#top" aria-label="Back to top" title="Back to top">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg>
+  </a>
+
+  <footer>
+    Read this in Obsidian via the <b>HTML Reader</b> plugin, or in any browser — tabs above are pure CSS, no script required. For the short intro and the "why," see <b>START-HERE.html</b>; for zone rules, each zone has its own <code>CLAUDE.md</code>.
+  </footer>
+
+</div>
+</body>
+</html>

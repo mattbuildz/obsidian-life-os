@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Start Here — Life OS</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IM+Fell+English:ital@0;1&family=Inter:wght@400;500;600&display=swap');
+
+  :root {
+    --bg: #f3f0ea;
+    --bg-2: #fffdf9;
+    --card: rgba(255,255,255,0.65);
+    --card-border: rgba(30,25,15,0.10);
+    --text: #23201a;
+    --text-muted: #6b6558;
+    --accent: #2f6f7d;      /* slate-teal, light mode */
+    --accent-soft: rgba(47,111,125,0.12);
+    --warm: #b8583f;
+    --code-bg: rgba(30,25,15,0.06);
+    --shadow: 0 10px 30px rgba(30,25,15,0.08);
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0c0e10;
+      --bg-2: #14171a;
+      --card: rgba(255,255,255,0.035);
+      --card-border: rgba(255,255,255,0.09);
+      --text: #e9e6df;
+      --text-muted: #948f83;
+      --accent: #4ade80;    /* jade, dark mode */
+      --accent-soft: rgba(74,222,128,0.12);
+      --warm: #e6a85c;
+      --code-bg: rgba(255,255,255,0.06);
+      --shadow: 0 10px 34px rgba(0,0,0,0.45);
+    }
+  }
+
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    line-height: 1.6;
+  }
+  body {
+    background-image:
+      radial-gradient(ellipse 900px 500px at 15% -10%, var(--accent-soft), transparent 60%),
+      radial-gradient(ellipse 700px 400px at 100% 0%, rgba(184,88,63,0.08), transparent 60%);
+    background-attachment: fixed;
+  }
+  h1, h2, h3 {
+    font-family: 'IM Fell English', Georgia, 'Iowan Old Style', serif;
+    font-weight: 400;
+    letter-spacing: 0.01em;
+    color: var(--text);
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 64px 24px 100px; }
+
+  /* ---- Hero ---- */
+  header.hero { text-align: center; margin-bottom: 44px; }
+  header.hero .kicker {
+    font-size: 13px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--accent); font-weight: 600; margin-bottom: 10px;
+  }
+  header.hero h1 { font-size: 44px; margin: 0 0 14px; }
+  header.hero p.lede {
+    font-size: 17px; color: var(--text-muted); max-width: 560px; margin: 0 auto;
+  }
+
+  code {
+    background: var(--code-bg); padding: 2px 6px; border-radius: 5px;
+    font-family: 'SF Mono', 'JetBrains Mono', Menlo, Consolas, monospace; font-size: 0.88em;
+  }
+
+  /* ---- Why (prose) ---- */
+  .prose { font-size: 16px; }
+  .prose p { margin: 0 0 20px; }
+  .prose h2 { font-size: 23px; margin: 40px 0 12px; }
+
+  /* ---- CTA to Handbook ---- */
+  .cta {
+    display: block; text-decoration: none; color: var(--text);
+    background: var(--card); border: 1.5px solid var(--accent);
+    border-radius: 16px; padding: 26px 28px; margin: 44px 0;
+    box-shadow: var(--shadow);
+    transition: transform .15s, box-shadow .15s;
+  }
+  .cta:hover { transform: translateY(-2px); }
+  .cta .cta-kicker {
+    font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+    color: var(--accent); font-weight: 700; margin-bottom: 6px;
+  }
+  .cta .cta-title { font-family: 'IM Fell English', Georgia, serif; font-size: 26px; margin-bottom: 6px; }
+  .cta .cta-desc { color: var(--text-muted); font-size: 14.5px; }
+  .cta .cta-arrow { float: right; font-size: 24px; color: var(--accent); }
+
+  /* ---- Orientation map ---- */
+  .orient {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px; margin: 36px 0 56px;
+  }
+  .orient .tile {
+    display: block; position: relative; color: var(--text); text-decoration: none;
+    background: var(--card); border: 1px solid var(--card-border);
+    border-radius: 12px; padding: 14px 16px;
+    transition: border-color .15s, transform .15s;
+  }
+  a.tile { cursor: pointer; }
+  a.tile:hover { border-color: var(--accent); transform: translateY(-1px); }
+  a.tile::after {
+    content: "↗ browser only"; position: absolute; top: 10px; right: 10px;
+    font-size: 10px; font-weight: 700; letter-spacing: .02em;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 3px 9px; border-radius: 999px;
+    opacity: 0; transform: translateY(-3px);
+    transition: opacity .15s, transform .15s; pointer-events: none;
+  }
+  a.tile:hover::after { opacity: 1; transform: translateY(0); }
+  .orient .tile .tag {
+    font-size: 11px; text-transform: uppercase; letter-spacing: .08em;
+    color: var(--accent); font-weight: 600; display: block; margin-bottom: 4px;
+  }
+  .orient .tile .name { font-weight: 600; display: block; margin-bottom: 2px; }
+  .orient .tile .desc { font-size: 13px; color: var(--text-muted); }
+  .orient .tile.current { border-color: var(--accent); background: var(--accent-soft); }
+
+  footer {
+    margin-top: 70px; padding-top: 30px; border-top: 1px solid var(--card-border);
+    color: var(--text-muted); font-size: 13.5px; text-align: center;
+  }
+
+  @media (max-width: 560px) {
+    header.hero h1 { font-size: 32px; }
+    .wrap { padding: 40px 16px 80px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="hero">
+    <div class="kicker">Life OS — one place to run your life, run by an agent</div>
+    <h1>Start Here</h1>
+    <p class="lede">A short introduction: what this is and why it exists. For commands, formats, and the day-to-day mechanics, this page hands off to the Handbook below.</p>
+  </header>
+
+  <div class="prose">
+    <p>The idea: <b>one place to run your whole life</b> — what you're doing, where you're heading, how it's going, what you know — instead of databases, templates and apps you have to build and keep tidy yourself. Most productivity setups make you the maintainer, and the system becomes one more project that gets dropped. Here an AI agent does the running: you're interviewed once, and from then on it plans, triages, keeps the record and compiles what you learn, while you show up, report honestly and choose between the options it offers.</p>
+
+    <p>Projects get dropped. Not from a lack of ideas — from the accumulation of small, unglamorous bookkeeping: what the plan was, whether yesterday actually went the way it felt like it went, whether a hunch is really a pattern or just one bad day dressed up as insight. This vault, run together with an AI agent, exists to carry that bookkeeping so the load on you doesn't compound.</p>
+
+    <p>Two zones, one direction. <b>Life</b> (<code>Life/</code>) is the daily operating system — calendar, journal, patterns, coaching. <b>Library</b> (<code>Library/</code>) is what you learn, compiled from what you actually read into a linked wiki (Karpathy's "LLM Wiki" pattern). Life may drop a file into Library's queue; Library never writes back into Life. Two different jobs, kept from bleeding into each other.</p>
+
+    <p>First step after setup: run <b><code>/avatar</code></b>. It is a short interview — who you are, where you're heading, what you can do — that writes the description every later plan is built on, and clears the sample person's data out of the vault (after asking). Then <b><code>/roadmap</code></b> turns it into phases, priorities and a first step, and the daily loop starts.</p>
+
+    <p>Three things worth knowing before you start. The vault ships with a made-up person's data (John) so it isn't empty on first open — <code>/avatar</code> clears it after asking, nothing is deleted for good, and he can be brought back. The most personal files — avatar, roadmap brief, inbox, journal, notes, patterns — are kept out of git on purpose, so pushing to a public repo doesn't publish them. And the Hub's <b>Status</b> tab shows facts computed by code, not by feel: how old your avatar is, how long since the last <code>/weekly</code>, whether the current phase is past its date. The details of all three are in the Handbook, under <i>Vault-wide</i> at the bottom.</p>
+  </div>
+
+  <a class="cta" href="HANDBOOK.html">
+    <span class="cta-arrow">→</span>
+    <div class="cta-kicker">Next</div>
+    <div class="cta-title">Open the Handbook</div>
+    <div class="cta-desc">Commands, formats, glossary, what lives where, and the full "why" behind each zone — organized as Life and Library, side by side.</div>
+  </a>
+
+  <nav class="orient">
+    <div class="tile current">
+      <span class="tag">You are here</span>
+      <span class="name">START-HERE.html</span>
+      <span class="desc">Intro — what this is, why it exists</span>
+    </div>
+    <a class="tile" href="HANDBOOK.html">
+      <span class="tag">Quick reference</span>
+      <span class="name">HANDBOOK.html</span>
+      <span class="desc">Commands, glossary, formats — Life and Library, side by side</span>
+    </a>
+    <div class="tile">
+      <span class="tag">Architecture</span>
+      <span class="name">README.md</span>
+      <span class="desc">Setup, zone contract, repository layout</span>
+    </div>
+    <div class="tile">
+      <span class="tag">Behavior</span>
+      <span class="name">COLLABORATION.md</span>
+      <span class="desc">How the agent is expected to work with you</span>
+    </div>
+  </nav>
+  <p class="cta-desc" style="text-align:center; margin-top:-40px; font-size:13px;"><b>These tiles don't click inside Obsidian</b> — its HTML Reader plugin forces every link into a dead new tab, and no click, Ctrl+click, or Cmd+click gets through. Press <code>Cmd/Ctrl+Shift+B</code> to open this page in your default browser instead — a QuickAdd macro, ships pre-configured in this vault, works from anywhere (not just while this file is active) — the tiles work normally there. <code>README.md</code> and <code>COLLABORATION.md</code> are Markdown, never clickable here either way.</p>
+
+  <footer>
+    Read this in Obsidian via the <b>HTML Reader</b> plugin, or in any browser. For zone-specific rules, each zone has its own <code>CLAUDE.md</code> — <code>Life/</code>, <code>Library/</code>, <code>System/</code>.
+  </footer>
+
+</div>
+</body>
+</html>
