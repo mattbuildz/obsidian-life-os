@@ -1,5 +1,9 @@
 # obsidian-life-os
 
+[![Demo: Life OS Hub with tasks, metrics, book reader, Library wiki search and the built-in agent terminal, recorded on sample data](docs/demo.gif)](docs/demo.mp4)
+
+*50-second demo on the sample person's data (click for the MP4): today's Hub, scheduling tasks by drag and drop, weekly metrics, the book reader, searching the Library wiki, the colour editor, and starting the agent in a terminal inside Obsidian. The agent commands (`/morning`, `/evening`, `/weekly`, `/library`) themselves aren't shown.*
+
 **One place to run your whole life — plans, tasks, journal, everything you learn — in one Obsidian vault, where an AI agent does the running so you don't have to maintain a system.**
 
 ## The idea
