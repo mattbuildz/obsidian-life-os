@@ -24,16 +24,6 @@ The vault has two parts, each with its own job:
 
 The two are joined in one direction: Life may drop a file into the Library's queue, and the Library never writes into Life.
 
-## Is it for you?
-
-**Yes, if** you lose projects to bookkeeping rather than lack of interest, will spend about 10 minutes each evening, and are fine with an agent reading and writing your notes. It isn't only for programmers.
-
-**No, if** you want a pretty notebook or enjoy designing your own system, don't want to run an agent (Claude Code or Codex, with their own cost), or need something proven — this is one person's system, early, and not yet validated on other people (see *Status*).
-
-You can look before you commit: a fresh clone holds a made-up person's data, and one command removes it.
-
-> **Already set up?** [`START-HERE.html`](START-HERE.html) is the short intro, [`HANDBOOK.html`](HANDBOOK.html) the day-to-day reference. Open them in a browser or Obsidian's HTML Reader — in Obsidian the links don't click, and `Cmd/Ctrl+Shift+B` opens the active `.html` file in your browser (details in the Handbook).
-
 ## What's inside
 
 - `Life/` — calendar, journal, inbox, patterns, and the roadmap (avatar, roadmap brief, backlog). Changes every day, on purpose.
