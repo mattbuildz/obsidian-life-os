@@ -6,6 +6,11 @@
 
 **One place to run your whole life — plans, tasks, journal, everything you learn — in one Obsidian vault, where an AI agent does the running so you don't have to maintain a system.**
 
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/diagrams/system-pipeline-dark.png">
+  <img alt="The whole system as four rows, each going from what you put in, through the command the agent runs, to what it writes. Once, then per phase: your interview answers go through /avatar and /roadmap into avatar.md and roadmap-brief.md. Every day: blocks, tasks and your report go through /morning and /evening into Calendar/, Journal/ and Patterns/. Every week: seven days of journal and an interview go through /weekly into next week's calendar, one file per block. On demand: clips and notes from the Web Clipper, /note and /source go through /library ingest, one source at a time, into wiki pages that cite the source." src=".github/diagrams/system-pipeline.png">
+</picture>
+
 ## The idea
 
 Most productivity setups make *you* the maintainer: you build databases and templates in Notion or a dozen apps, keep them tidy, and decide every day what to do next. The system becomes one more project, and it gets dropped like the others.
@@ -32,7 +37,10 @@ The two are joined in one direction: Life may drop a file into the Library's que
 
 **Who writes where**
 
-![Who writes where: the agent writes Calendar, Journal plan sections, Inbox triage, Patterns, the avatar and the roadmap brief (from interviews you confirm), the wiki and Checkpoints through slash commands; you write Calendar blocks, journaling, Inbox tasks and clipped pages by hand. The only way from Life into Library is adding new files to sources/inbox.](.github/diagrams/who-writes-where.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/diagrams/writers-matrix-dark.png">
+  <img alt="Who writes where, one row per place. Life: the agent plans the week in Calendar/ (/weekly, /evening) and you add and drag blocks; the agent writes the plan sections of Journal/ (/morning, /evening) and you write the journal; the agent triages INBOX.md (/evening) and you add tasks; only you write Notes/; only the agent writes the factual log in Patterns/ (/morning, /evening); the agent writes avatar.md from an interview (/avatar) with your answers; the agent writes phases, priorities and Now in roadmap-brief.md (/roadmap, /weekly for section 6) and you choose and confirm. Library: the agent may only add new files to sources/inbox/ (/note, /source) and you clip pages; only the agent compiles wiki/ (/library). System: only the agent writes Checkpoints/ (/checkpoint). The only way from Life into Library is a new file in sources/inbox/." src=".github/diagrams/writers-matrix.png">
+</picture>
 
 `/morning`, `/evening` and `/weekly` may drop a file into `Library/sources/inbox/` and nothing else in Library. The Library reads `avatar.md` and `roadmap-brief.md` for context and never writes into `Life/`. Two sessions never compile the wiki at once.
 
@@ -44,15 +52,24 @@ The two are joined in one direction: Life may drop a file into the Library's que
 
 ## The daily loop
 
-![The daily loop: /morning shows today's blocks and minimum, blocks happen or don't, /evening closes the day, plans tomorrow and writes one factual entry to Patterns/observation-log.md; an observation becomes a confirmed pattern in patterns.md only on its third repeat.](.github/diagrams/daily-loop.png)
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset=".github/diagrams/life-loop-dark.png">
+  <img alt="The daily loop and the week around it. /weekly reads roadmap-brief.md first, reviews the last seven days, interviews you and writes the week's blocks. Every day: /morning shows the blocks and their minimums, names the day's anchor and opens the log entry; the blocks happen or don't, and new tasks go to INBOX.md; /evening gives a verdict on the anchor, triages the inbox, plans tomorrow and closes the log entry; the next day starts again at /morning. Seven days of data go back to /weekly. /evening writes one factual entry a day to observation-log.md; an observation becomes a confirmed pattern in patterns.md only on its third repeat, and confirmed patterns shape the next plan." src=".github/diagrams/life-loop.png">
+</picture>
 
 Every block on the calendar carries a concrete **minimum** — not "work on the project," but something checkable when the block ends. `/evening` also decides, in one honest sentence, whether the day's minimum actually got done. A pattern only gets to matter once it has shown up three separate times in the raw log, not the first time it looks like one.
 
 ## The Library pipeline
 
-![The Library pipeline: clips land in Library/sources/inbox/; /library compiles one file at a time; a real mechanism becomes a new or updated wiki page with a source citation, wired into its folder's MOC, while a mere pointer becomes one line in wiki/_catalog.md.](.github/diagrams/library-pipeline.png)
+[Diagram: the Library pipeline, from clip to cited answer](.github/diagrams/library-flow.png)
 
 A page only gets written when a source contains an actual mechanism — something with a "why," not just a fact. Every page keeps a visible link back to the file it came from. Every folder has one entry-point page (its MOC) written in the order you'd actually learn the material, and a page that isn't reachable from its folder's MOC is treated as invisible.
+
+## Rules enforced by code
+
+[Diagram: the four checks, in the order they fire](.github/diagrams/inside-guardrails.png)
+
+Four checks run as code, so they don't depend on the model remembering a rule. One hook refuses any write under `Library/sources/` except a new file in `inbox/`. A second hook checks each wiki page the moment it is saved. `lint.py` checks the whole wiki at the end of every ingest, and `vault-status.py` (see *Facts by code* below) computes the dates and queue sizes that `/weekly` and the Status tab report.
 
 ## Good to know
 

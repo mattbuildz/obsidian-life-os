@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Who writes where</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #f5f5f5; color: #2d3142; font-family: 'Geist', system-ui, sans-serif; }
+    .frame { max-width: 960px; margin: 0 auto; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 878" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="writers-matrix-title writers-matrix-desc">
+        <title id="writers-matrix-title">Who writes where</title>
+        <desc id="writers-matrix-desc">One row per place in the vault, with what the agent writes there through slash commands and what you write by hand. Life: Calendar, Journal, Inbox, Notes, Patterns, the avatar and the roadmap brief. Library: the source queue and the wiki. System: Checkpoints. The agent never writes Notes; you never write Patterns, the wiki or Checkpoints. The only way from Life into Library is a new file in sources/inbox.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#4f5d75"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#eb6c36"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#f5f5f5"/>
+        <line x1="40" y1="580" x2="920" y2="580" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <line x1="40" y1="732" x2="920" y2="732" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <rect x="40" y="104" width="272" height="56" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="104" width="272" height="56" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="129" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Where it lives</text>
+        <text x="56" y="146" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="start">folder or file</text>
+        <rect x="328" y="104" width="288" height="56" rx="6" fill="#2d3142"/>
+        <text x="472.0" y="129" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="middle">Agent</text>
+        <text x="472.0" y="146" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#f5f5f5" text-anchor="middle">slash commands</text>
+        <rect x="632" y="104" width="288" height="56" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="104" width="288" height="56" rx="6" fill="rgba(79,93,117,0.17)" stroke="#7a8399" stroke-width="1"/>
+        <text x="776.0" y="129" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">You</text>
+        <text x="776.0" y="146" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="middle">by hand, in Obsidian</text>
+        <rect x="40" y="200" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="200" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="229" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Calendar</text>
+        <text x="296" y="229" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">Calendar/</text>
+        <rect x="328" y="200" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="200" width="288" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="472.0" y="221" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Plans the week</text>
+        <text x="472.0" y="237" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="middle">/weekly · /evening</text>
+        <rect x="632" y="200" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="200" width="288" height="48" rx="6" fill="rgba(79,93,117,0.17)" stroke="#7a8399" stroke-width="1"/>
+        <text x="776.0" y="229" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Add and drag blocks</text>
+        <rect x="40" y="252" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="252" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="281" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Journal</text>
+        <text x="296" y="281" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">Journal/</text>
+        <rect x="328" y="252" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="252" width="288" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="472.0" y="273" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Plan sections</text>
+        <text x="472.0" y="289" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="middle">/morning · /evening</text>
+        <rect x="632" y="252" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="252" width="288" height="48" rx="6" fill="rgba(79,93,117,0.17)" stroke="#7a8399" stroke-width="1"/>
+        <text x="776.0" y="281" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Write the journal</text>
+        <rect x="40" y="304" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="304" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="333" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Inbox</text>
+        <text x="296" y="333" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">INBOX.md</text>
+        <rect x="328" y="304" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="304" width="288" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="472.0" y="325" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Triage</text>
+        <text x="472.0" y="341" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="middle">/evening</text>
+        <rect x="632" y="304" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="304" width="288" height="48" rx="6" fill="rgba(79,93,117,0.17)" stroke="#7a8399" stroke-width="1"/>
+        <text x="776.0" y="333" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Add tasks</text>
+        <rect x="40" y="356" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="356" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="385" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Notes</text>
+        <text x="296" y="385" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">Notes/</text>
+        <rect x="328" y="356" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="356" width="288" height="48" rx="6" fill="none" stroke="#bfc0c0" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="472.0" y="385" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#7a8399" text-anchor="middle">—</text>
+        <rect x="632" y="356" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="356" width="288" height="48" rx="6" fill="rgba(79,93,117,0.17)" stroke="#7a8399" stroke-width="1"/>
+        <text x="776.0" y="385" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Write your own notes</text>
+        <rect x="40" y="408" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="408" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="437" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Patterns</text>
+        <text x="296" y="437" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">Patterns/</text>
+        <rect x="328" y="408" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="408" width="288" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="472.0" y="429" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Factual log</text>
+        <text x="472.0" y="445" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="middle">/morning · /evening</text>
+        <rect x="632" y="408" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="408" width="288" height="48" rx="6" fill="none" stroke="#bfc0c0" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="776.0" y="437" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#7a8399" text-anchor="middle">—</text>
+        <rect x="40" y="460" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="460" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="489" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Avatar</text>
+        <text x="296" y="489" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">roadmap/avatar.md</text>
+        <rect x="328" y="460" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="460" width="288" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="472.0" y="481" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Writes from an interview</text>
+        <text x="472.0" y="497" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="middle">/avatar</text>
+        <rect x="632" y="460" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="460" width="288" height="48" rx="6" fill="rgba(79,93,117,0.17)" stroke="#7a8399" stroke-width="1"/>
+        <text x="776.0" y="489" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Your answers</text>
+        <rect x="40" y="512" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="512" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="541" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Brief</text>
+        <text x="296" y="541" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">roadmap-brief.md</text>
+        <rect x="328" y="512" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="512" width="288" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="472.0" y="533" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Phases · priorities · Now</text>
+        <text x="472.0" y="549" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="middle">/roadmap · /weekly (§6)</text>
+        <rect x="632" y="512" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="512" width="288" height="48" rx="6" fill="rgba(79,93,117,0.17)" stroke="#7a8399" stroke-width="1"/>
+        <text x="776.0" y="541" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Choose &amp; confirm</text>
+        <rect x="40" y="612" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="612" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="641" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Source queue</text>
+        <text x="296" y="641" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">sources/inbox/</text>
+        <rect x="328" y="612" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="612" width="288" height="48" rx="6" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1.2"/>
+        <text x="472.0" y="633" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#eb6c36" text-anchor="middle">New files only</text>
+        <text x="472.0" y="649" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#eb6c36" text-anchor="middle">/note · /source</text>
+        <rect x="632" y="612" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="612" width="288" height="48" rx="6" fill="rgba(79,93,117,0.17)" stroke="#7a8399" stroke-width="1"/>
+        <text x="776.0" y="641" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Clip pages</text>
+        <rect x="40" y="664" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="664" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="693" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Wiki</text>
+        <text x="296" y="693" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">wiki/</text>
+        <rect x="328" y="664" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="664" width="288" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="472.0" y="685" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Compiles pages</text>
+        <text x="472.0" y="701" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="middle">/library</text>
+        <rect x="632" y="664" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="664" width="288" height="48" rx="6" fill="none" stroke="#bfc0c0" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="776.0" y="693" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#7a8399" text-anchor="middle">—</text>
+        <rect x="40" y="764" width="272" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="40" y="764" width="272" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="56" y="793" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="start">Checkpoints</text>
+        <text x="296" y="793" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="end">Checkpoints/</text>
+        <rect x="328" y="764" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="328" y="764" width="288" height="48" rx="6" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text x="472.0" y="785" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#2d3142" text-anchor="middle">Session handoff</text>
+        <text x="472.0" y="801" font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" font-weight="500" letter-spacing="0" fill="#4f5d75" text-anchor="middle">/checkpoint</text>
+        <rect x="632" y="764" width="288" height="48" rx="6" fill="#f5f5f5"/>
+        <rect x="632" y="764" width="288" height="48" rx="6" fill="none" stroke="#bfc0c0" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="776.0" y="793" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#7a8399" text-anchor="middle">—</text>
+        <text x="40" y="40" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.18em" fill="#4f5d75" text-anchor="start">WHAT'S INSIDE · ONE ROW PER PLACE</text>
+        <text x="40" y="76" font-family="'Instrument Serif', 'Noto Serif', serif" font-size="28" letter-spacing="-0.01em" fill="#2d3142">Who writes where</text>
+        <text x="40" y="188" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#4f5d75" text-anchor="start">LIFE/ · CHANGES DAILY</text>
+        <text x="40" y="600" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#4f5d75" text-anchor="start">LIBRARY/ · WHAT YOU LEARN</text>
+        <text x="40" y="752" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#4f5d75" text-anchor="start">SYSTEM/ · EXTRAS</text>
+        <line x1="40" y1="838" x2="920" y2="838" stroke="rgba(45,49,66,0.12)" stroke-width="0.8"/>
+        <text x="40" y="856" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#4f5d75" text-anchor="start">LEGEND</text>
+        <rect x="112" y="847" width="16" height="11" rx="2" fill="#ffffff" stroke="#bfc0c0" stroke-width="1"/>
+        <text xml:space="preserve" x="136" y="856" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#4f5d75" text-anchor="start">the agent writes here</text>
+        <rect x="279.5" y="847" width="16" height="11" rx="2" fill="rgba(79,93,117,0.17)" stroke="#7a8399" stroke-width="1"/>
+        <text xml:space="preserve" x="303.5" y="856" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#4f5d75" text-anchor="start">you write here</text>
+        <rect x="408.5" y="847" width="16" height="11" rx="2" fill="none" stroke="#bfc0c0" stroke-width="1" stroke-dasharray="3,2"/>
+        <text xml:space="preserve" x="432.5" y="856" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#4f5d75" text-anchor="start">never writes here</text>
+        <rect x="554.0" y="847" width="16" height="11" rx="2" fill="rgba(235,108,54,0.08)" stroke="#eb6c36" stroke-width="1"/>
+        <text xml:space="preserve" x="578.0" y="856" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#4f5d75" text-anchor="start">the only way from Life into Library</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Rules that code enforces, not the model</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #2d3142; color: #f5f5f5; font-family: 'Geist', system-ui, sans-serif; }
+    .frame { max-width: 960px; margin: 0 auto; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 680" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="inside-guardrails-dark-title inside-guardrails-dark-desc">
+        <title id="inside-guardrails-dark-title">Rules that code enforces, not the model</title>
+        <desc id="inside-guardrails-dark-desc">Three checks in the order they fire during a Library ingest, plus the status script: the PreToolUse hook library.py pre refuses any write under Library/sources except a new file in inbox; the PostToolUse hook library.py post checks the one wiki page just saved for frontmatter, id, kind, status, sources and a 120-line limit (250 for procedures); lint.py runs at the end of every ingest across the whole wiki in 12 groups of checks. On the Life side vault-status.py computes avatar age, days since the last /weekly, gaps in the daily loop, queue sizes and overdue phases; /weekly runs it first and the Hub Status tab shows its status.json snapshot.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bfc0c0"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f08a59"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#2d3142"/>
+        <path d="M 40 148 L 918 148" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <line x1="176.0" y1="148" x2="176.0" y2="172" stroke="#f08a59" stroke-width="1"/>
+        <line x1="480.0" y1="148" x2="480.0" y2="172" stroke="#bfc0c0" stroke-width="1"/>
+        <line x1="784.0" y1="148" x2="784.0" y2="172" stroke="#bfc0c0" stroke-width="1"/>
+        <path d="M 385 542 L 544 542 Q 552 542 552 534 L 552 532 Q 552 524 560 524 L 606 524" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 385 574 L 544 574 Q 552 574 552 582 L 552 584 Q 552 592 560 592 L 606 592" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <rect x="423.39" y="522.5" width="89.22" height="13" rx="2" fill="#2d3142"/>
+        <text x="468" y="532" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#8e98ac" text-anchor="middle">PRINTS CHECKS</text>
+        <rect x="413.4" y="581.0" width="109.2" height="13" rx="2" fill="#2d3142"/>
+        <text x="468" y="590.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0" fill="#8e98ac" text-anchor="middle">System/status.json</text>
+        <rect x="40" y="172" width="272" height="228" rx="6" fill="#2d3142"/>
+        <rect x="40" y="172" width="272" height="228" rx="6" fill="rgba(240,138,89,0.10)" stroke="#f08a59" stroke-width="1.2"/>
+        <text x="56" y="196" font-family="'Geist Mono', ui-monospace, monospace" font-size="8.5" font-weight="500" letter-spacing="0.08em" fill="#8e98ac" text-anchor="start">HOOK · PreToolUse</text>
+        <text x="56" y="218" font-family="'Geist Mono', ui-monospace, monospace" font-size="14" font-weight="600" fill="#f5f5f5" text-anchor="start">library.py pre</text>
+        <line x1="56" y1="232" x2="296" y2="232" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="56" y="252" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">CHECKS · WHERE THE WRITE LANDS</text>
+        <text xml:space="preserve" x="56" y="271" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start">Anything under <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">Library/sources/</tspan></text>
+        <text xml:space="preserve" x="56" y="287" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start">is refused, with one exception:</text>
+        <text xml:space="preserve" x="56" y="303" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start">a new file in <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">inbox/</tspan>.</text>
+        <text xml:space="preserve" x="56" y="319" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start">Sources can be moved, never edited.</text>
+        <line x1="56" y1="332" x2="296" y2="332" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="56" y="352" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">IF IT FAILS</text>
+        <rect x="249.6" y="340" width="46.4" height="16" rx="2" fill="rgba(240,138,89,0.22)"/>
+        <text x="272.8" y="351.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f08a59" text-anchor="middle">exit 2</text>
+        <text xml:space="preserve" x="56" y="370" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">The write is blocked and the agent</text>
+        <text xml:space="preserve" x="56" y="385" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">is told why.</text>
+        <rect x="344" y="172" width="272" height="228" rx="6" fill="#2d3142"/>
+        <rect x="344" y="172" width="272" height="228" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="360" y="196" font-family="'Geist Mono', ui-monospace, monospace" font-size="8.5" font-weight="500" letter-spacing="0.08em" fill="#8e98ac" text-anchor="start">HOOK · PostToolUse</text>
+        <text x="360" y="218" font-family="'Geist Mono', ui-monospace, monospace" font-size="14" font-weight="600" fill="#f5f5f5" text-anchor="start">library.py post</text>
+        <line x1="360" y1="232" x2="600" y2="232" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="360" y="252" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">CHECKS · THE ONE PAGE JUST SAVED</text>
+        <text xml:space="preserve" x="360" y="271" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start">frontmatter, with an <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">id</tspan></text>
+        <text xml:space="preserve" x="360" y="287" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start"><tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">kind</tspan> and <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">status</tspan> from fixed lists</text>
+        <text xml:space="preserve" x="360" y="303" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start"><tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">sources:</tspan> is not empty</text>
+        <text xml:space="preserve" x="360" y="319" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start">120 lines at most (procedure: 250)</text>
+        <line x1="360" y1="332" x2="600" y2="332" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="360" y="352" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">IF IT FAILS</text>
+        <rect x="553.6" y="340" width="46.4" height="16" rx="2" fill="rgba(245,245,245,0.12)"/>
+        <text x="576.8" y="351.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f5f5f5" text-anchor="middle">exit 2</text>
+        <text xml:space="preserve" x="360" y="370" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">“Fix this now, not at the end</text>
+        <text xml:space="preserve" x="360" y="385" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">of the ingest.”</text>
+        <rect x="648" y="172" width="272" height="228" rx="6" fill="#2d3142"/>
+        <rect x="648" y="172" width="272" height="228" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="664" y="196" font-family="'Geist Mono', ui-monospace, monospace" font-size="8.5" font-weight="500" letter-spacing="0.08em" fill="#8e98ac" text-anchor="start">SCRIPT · zero LLM</text>
+        <text x="664" y="218" font-family="'Geist Mono', ui-monospace, monospace" font-size="14" font-weight="600" fill="#f5f5f5" text-anchor="start">lint.py</text>
+        <line x1="664" y1="232" x2="904" y2="232" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="664" y="252" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">CHECKS · THE WHOLE WIKI, 12 GROUPS</text>
+        <text xml:space="preserve" x="664" y="271" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start">dead links, orphan pages</text>
+        <text xml:space="preserve" x="664" y="287" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start"><tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">INDEX.md</tspan> out of step with the pages</text>
+        <text xml:space="preserve" x="664" y="303" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start">a source changed since it was ingested</text>
+        <text xml:space="preserve" x="664" y="319" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#f5f5f5" text-anchor="start">a page missing from its folder's MOC</text>
+        <line x1="664" y1="332" x2="904" y2="332" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="664" y="352" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">IF IT FAILS</text>
+        <rect x="857.6" y="340" width="46.4" height="16" rx="2" fill="rgba(245,245,245,0.12)"/>
+        <text x="880.8" y="351.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f5f5f5" text-anchor="middle">exit 1</text>
+        <text xml:space="preserve" x="664" y="370" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">Every problem is listed, by category.</text>
+        <text xml:space="preserve" x="664" y="385" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">Clean means zero problems.</text>
+        <rect x="40" y="510" width="344" height="96" rx="6" fill="#2d3142"/>
+        <rect x="40" y="510" width="344" height="96" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="56" y="536" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">vault-status.py</text>
+        <text xml:space="preserve" x="56" y="556" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">avatar age · days since the last <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">/weekly</tspan></text>
+        <text xml:space="preserve" x="56" y="572" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">gaps in the daily loop · queue sizes</text>
+        <text xml:space="preserve" x="56" y="588" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">an active phase past its target date</text>
+        <rect x="608" y="502" width="312" height="44" rx="6" fill="#2d3142"/>
+        <rect x="608" y="502" width="312" height="44" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="624" y="528" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/weekly</text>
+        <text xml:space="preserve" x="686.4" y="528" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">runs it first, says each WARN once</text>
+        <rect x="608" y="570" width="312" height="44" rx="6" fill="#2d3142"/>
+        <rect x="608" y="570" width="312" height="44" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="624" y="596" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">Hub · Status tab</text>
+        <text xml:space="preserve" x="741.6" y="596" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">shows the snapshot</text>
+        <text x="40" y="40" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.18em" fill="#bfc0c0" text-anchor="start">INSIDE · TWO HOOKS, A LINTER, A STATUS SCRIPT</text>
+        <text x="40" y="76" font-family="'Instrument Serif', 'Noto Serif', serif" font-size="28" letter-spacing="-0.01em" fill="#f5f5f5">Rules that code enforces, not the model</text>
+        <text x="176.0" y="132" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.12em" fill="#f08a59" text-anchor="middle">BEFORE EVERY WRITE</text>
+        <circle cx="176.0" cy="148" r="4" fill="#f08a59"/>
+        <text x="480.0" y="132" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.12em" fill="#bfc0c0" text-anchor="middle">RIGHT AFTER A WIKI PAGE IS SAVED</text>
+        <circle cx="480.0" cy="148" r="4" fill="#f5f5f5"/>
+        <text x="784.0" y="132" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.12em" fill="#bfc0c0" text-anchor="middle">AT THE END OF EVERY INGEST</text>
+        <circle cx="784.0" cy="148" r="4" fill="#f5f5f5"/>
+        <text x="480" y="434" font-family="'Instrument Serif', 'Noto Serif', serif" font-style="italic" font-size="14" fill="#bfc0c0" text-anchor="middle">Mid-ingest the wiki is legitimately inconsistent, so the hooks check one file and the full lint waits for the end.</text>
+        <line x1="40" y1="460" x2="920" y2="460" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="40" y="486" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">THE SAME IDEA ON THE LIFE SIDE: FACTS COMPUTED, NOT EYEBALLED</text>
+        <line x1="40" y1="640" x2="920" y2="640" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="40" y="658" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">LEGEND</text>
+        <rect x="112" y="649" width="16" height="11" rx="2" fill="rgba(240,138,89,0.10)" stroke="#f08a59" stroke-width="1"/>
+        <text xml:space="preserve" x="136" y="658" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">the one hard wall: source files are immutable</text>
+        <rect x="404" y="646.5" width="46.4" height="16" rx="2" fill="rgba(245,245,245,0.12)"/>
+        <text x="427.2" y="658.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f5f5f5" text-anchor="middle">exit 2</text>
+        <text xml:space="preserve" x="458.4" y="658" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">stops the agent and shows it the message</text>
+        <rect x="686" y="646.5" width="46.4" height="16" rx="2" fill="rgba(245,245,245,0.12)"/>
+        <text x="709.2" y="658.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f5f5f5" text-anchor="middle">exit 1</text>
+        <text xml:space="preserve" x="740.4" y="658" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">there are problems to fix</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

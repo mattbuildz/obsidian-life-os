@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The Library pipeline</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #2d3142; color: #f5f5f5; font-family: 'Geist', system-ui, sans-serif; }
+    .frame { max-width: 960px; margin: 0 auto; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 558" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="library-flow-dark-title library-flow-dark-desc">
+        <title id="library-flow-dark-title">The Library pipeline</title>
+        <desc id="library-flow-dark-desc">Anything dropped through the Web Clipper, /note, /source or by hand lands in Library/sources/inbox and waits. /library ingest compiles one source at a time: it works out the source type, lists candidates each with a quote, shows you the list, then writes. A real mechanism becomes a new or updated wiki page that cites its source and sits in its folder's MOC; a mere pointer becomes one line in wiki/_catalog.md. Later, /library with a question reads the pages, not the sources, and answers with a citation per claim.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bfc0c0"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f08a59"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#2d3142"/>
+        <path d="M 217 228.0 L 254 228.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 433 228.0 L 470 228.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 649 168 L 742 168" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 649 276 L 742 276" fill="none" stroke="#f08a59" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <path d="M 832.0 321 L 832 432 Q 832.0 440 824 440 L 650 440" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 471 440 L 434 440" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <rect x="669.21" y="148.5" width="53.58" height="13" rx="2" fill="#2d3142"/>
+        <text x="696.0" y="158" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#8e98ac" text-anchor="middle">POINTER</text>
+        <rect x="663.27" y="256.5" width="65.46" height="13" rx="2" fill="#2d3142"/>
+        <text x="696.0" y="266" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#f08a59" text-anchor="middle">MECHANISM</text>
+        <rect x="746.63" y="354.5" width="77.34" height="13" rx="2" fill="#2d3142"/>
+        <text x="785.3" y="364" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#8e98ac" text-anchor="middle">READS PAGES</text>
+        <rect x="40" y="176.0" width="176" height="104" rx="6" fill="#2d3142"/>
+        <rect x="40" y="176.0" width="176" height="104" rx="6" fill="rgba(191,192,192,0.18)" stroke="#8e98ac" stroke-width="1"/>
+        <text x="54" y="202.0" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">Four ways in</text>
+        <text xml:space="preserve" x="54" y="222.0" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">Web Clipper, the main one</text>
+        <text xml:space="preserve" x="54" y="238.0" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start"><tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">/note</tspan> · <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">/source</tspan></text>
+        <text xml:space="preserve" x="54" y="254.0" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">or a file, by hand</text>
+        <rect x="256" y="184.0" width="176" height="88" rx="6" fill="#2d3142"/>
+        <rect x="256" y="184.0" width="176" height="88" rx="6" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text x="270" y="210.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">sources/inbox/</text>
+        <text xml:space="preserve" x="270" y="230.0" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">the queue</text>
+        <text xml:space="preserve" x="270" y="246.0" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">waits until you compile</text>
+        <rect x="472" y="136" width="176" height="184" rx="6" fill="#2d3142"/>
+        <rect x="472" y="136" width="176" height="184" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="486" y="162" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/library ingest</text>
+        <text xml:space="preserve" x="486" y="182" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">one source at a time</text>
+        <text xml:space="preserve" x="486" y="198" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">works out what kind it is</text>
+        <text xml:space="preserve" x="486" y="214" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">a quote per candidate,</text>
+        <text xml:space="preserve" x="486" y="230" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">you see the list first</text>
+        <text xml:space="preserve" x="486" y="246" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">new page, or adds to one</text>
+        <text xml:space="preserve" x="486" y="262" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">MOC, <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">INDEX.md</tspan>, <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">log.md</tspan></text>
+        <text xml:space="preserve" x="486" y="278" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">source → the archive</text>
+        <text xml:space="preserve" x="486" y="294" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start"><tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">lint.py</tspan> at the end</text>
+        <rect x="744" y="136" width="176" height="64" rx="6" fill="#2d3142"/>
+        <rect x="744" y="136" width="176" height="64" rx="6" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text x="758" y="162" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">wiki/_catalog.md</text>
+        <text xml:space="preserve" x="758" y="182" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">one line, no page yet</text>
+        <rect x="744" y="232" width="176" height="88" rx="6" fill="#2d3142"/>
+        <rect x="744" y="232" width="176" height="88" rx="6" fill="rgba(240,138,89,0.10)" stroke="#f08a59" stroke-width="1.2"/>
+        <text x="758" y="258" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">A wiki page</text>
+        <text xml:space="preserve" x="758" y="278" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">new, or an existing one</text>
+        <text xml:space="preserve" x="758" y="294" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">cites its source</text>
+        <text xml:space="preserve" x="758" y="310" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">sits in the folder's MOC</text>
+        <rect x="472" y="396" width="176" height="88" rx="6" fill="#2d3142"/>
+        <rect x="472" y="396" width="176" height="88" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="486" y="422" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/library &lt;question&gt;</text>
+        <text xml:space="preserve" x="486" y="442" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">reads pages, not sources</text>
+        <text xml:space="preserve" x="486" y="458" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">a citation per claim</text>
+        <text xml:space="preserve" x="486" y="474" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">says what isn't there</text>
+        <rect x="256" y="396" width="176" height="88" rx="6" fill="#2d3142"/>
+        <rect x="256" y="396" width="176" height="88" rx="6" fill="rgba(191,192,192,0.18)" stroke="#8e98ac" stroke-width="1"/>
+        <text x="270" y="422" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">A cited answer</text>
+        <text xml:space="preserve" x="270" y="442" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">every claim links a page</text>
+        <text xml:space="preserve" x="270" y="458" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">can be saved as a page,</text>
+        <text xml:space="preserve" x="270" y="474" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">if you say so</text>
+        <text x="40" y="40" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.18em" fill="#bfc0c0" text-anchor="start">LIBRARY/ · DROP IT, COMPILE IT, ASK IT</text>
+        <text x="40" y="76" font-family="'Instrument Serif', 'Noto Serif', serif" font-size="28" letter-spacing="-0.01em" fill="#f5f5f5">The Library pipeline</text>
+        <rect x="40" y="104" width="28" height="16" rx="2" fill="rgba(245,245,245,0.12)"/>
+        <text x="54" y="115.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f5f5f5" text-anchor="middle">01</text>
+        <text x="78" y="115.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">DROP IT · A SECOND</text>
+        <rect x="472" y="104" width="28" height="16" rx="2" fill="rgba(245,245,245,0.12)"/>
+        <text x="486" y="115.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f5f5f5" text-anchor="middle">02</text>
+        <text x="510" y="115.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">COMPILE · YOU TRIGGER IT</text>
+        <rect x="472" y="362" width="28" height="16" rx="2" fill="rgba(245,245,245,0.12)"/>
+        <text x="486" y="373.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f5f5f5" text-anchor="middle">03</text>
+        <text x="510" y="373.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">ASK · WHENEVER</text>
+        <text x="40" y="434" font-family="'Instrument Serif', 'Noto Serif', serif" font-style="italic" font-size="14" fill="#bfc0c0">Nothing compiles by itself.</text>
+        <text x="40" y="454" font-family="'Instrument Serif', 'Noto Serif', serif" font-style="italic" font-size="14" fill="#bfc0c0">One source, when you say so.</text>
+        <line x1="40" y1="518" x2="920" y2="518" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="40" y="536" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">LEGEND</text>
+        <rect x="112" y="527" width="16" height="11" rx="2" fill="rgba(191,192,192,0.18)" stroke="#8e98ac" stroke-width="1"/>
+        <text xml:space="preserve" x="136" y="536" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">you</text>
+        <rect x="180.5" y="527" width="16" height="11" rx="2" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text xml:space="preserve" x="204.5" y="536" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">a command the agent runs</text>
+        <rect x="364.5" y="527" width="16" height="11" rx="2" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text xml:space="preserve" x="388.5" y="536" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">a file</text>
+        <line x1="449.5" y1="532.5" x2="471.5" y2="532.5" stroke="#f08a59" stroke-width="1.2" marker-end="url(#arrow-accent)"/>
+        <text xml:space="preserve" x="481.5" y="536" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">a page is written only for a real mechanism, something with a why</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

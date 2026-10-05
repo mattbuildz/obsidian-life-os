@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Life OS: what goes in, what the agent runs, what it writes</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #2d3142; color: #f5f5f5; font-family: 'Geist', system-ui, sans-serif; }
+    .frame { max-width: 960px; margin: 0 auto; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 500" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="system-pipeline-dark-title system-pipeline-dark-desc">
+        <title id="system-pipeline-dark-title">Life OS: what goes in, what the agent runs, what it writes</title>
+        <desc id="system-pipeline-dark-desc">Four rhythms, each from input to command to files. Once, then per phase: your interview answers go through /avatar and /roadmap into avatar.md and roadmap-brief.md. Every day: blocks, tasks and your report go through /morning and /evening into Calendar, Journal and Patterns. Every week: seven days of journal and an interview go through /weekly into next week's calendar. On demand: clips and notes go through /library ingest into wiki pages that cite the source.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bfc0c0"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f08a59"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#2d3142"/>
+        <line x1="40" y1="128" x2="920" y2="128" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <path d="M 393 180.0 L 430 180.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 657 180.0 L 694 180.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 393 264.0 L 430 264.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 657 264.0 L 694 264.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 393 348.0 L 430 348.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 657 348.0 L 694 348.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 393 432.0 L 430 432.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 657 432.0 L 694 432.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <rect x="168" y="148" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="168" y="148" width="224" height="64" rx="6" fill="rgba(191,192,192,0.18)" stroke="#8e98ac" stroke-width="1"/>
+        <text x="182" y="174" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">Your interview answers</text>
+        <text xml:space="preserve" x="182" y="194" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">who you are, where you're heading</text>
+        <rect x="432" y="148" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="432" y="148" width="224" height="64" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="446" y="174" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/avatar → /roadmap</text>
+        <text xml:space="preserve" x="446" y="194" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">an interview, then a plan</text>
+        <rect x="696" y="148" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="696" y="148" width="224" height="64" rx="6" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text x="710" y="174" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">Who you are, and the plan</text>
+        <text xml:space="preserve" x="710" y="194" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start"><tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">avatar.md</tspan> · <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">roadmap-brief.md</tspan></text>
+        <rect x="168" y="232" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="168" y="232" width="224" height="64" rx="6" fill="rgba(191,192,192,0.18)" stroke="#8e98ac" stroke-width="1"/>
+        <text x="182" y="258" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">Blocks, tasks, your report</text>
+        <text xml:space="preserve" x="182" y="278" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">what's planned, what happened</text>
+        <rect x="432" y="232" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="432" y="232" width="224" height="64" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="446" y="258" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/morning · /evening</text>
+        <text xml:space="preserve" x="446" y="278" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">about 10 minutes each evening</text>
+        <rect x="696" y="232" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="696" y="232" width="224" height="64" rx="6" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text x="710" y="258" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">The plan and the record</text>
+        <text xml:space="preserve" x="710" y="278" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start"><tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">Calendar/</tspan> · <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">Journal/</tspan> · <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">Patterns/</tspan></text>
+        <rect x="168" y="316" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="168" y="316" width="224" height="64" rx="6" fill="rgba(191,192,192,0.18)" stroke="#8e98ac" stroke-width="1"/>
+        <text x="182" y="342" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">The week's facts + answers</text>
+        <text xml:space="preserve" x="182" y="362" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">7 days of journal, an interview</text>
+        <rect x="432" y="316" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="432" y="316" width="224" height="64" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="446" y="342" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/weekly</text>
+        <text xml:space="preserve" x="446" y="362" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">reviews first, then blocks time</text>
+        <rect x="696" y="316" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="696" y="316" width="224" height="64" rx="6" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text x="710" y="342" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">Next week on the calendar</text>
+        <text xml:space="preserve" x="710" y="362" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start"><tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">Calendar/</tspan> one file per block</text>
+        <rect x="168" y="400" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="168" y="400" width="224" height="64" rx="6" fill="rgba(191,192,192,0.18)" stroke="#8e98ac" stroke-width="1"/>
+        <text x="182" y="426" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">Clips and notes</text>
+        <text xml:space="preserve" x="182" y="446" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">Web Clipper, <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">/note</tspan>, <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">/source</tspan></text>
+        <rect x="432" y="400" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="432" y="400" width="224" height="64" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="446" y="426" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/library ingest</text>
+        <text xml:space="preserve" x="446" y="446" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">one source at a time</text>
+        <rect x="696" y="400" width="224" height="64" rx="6" fill="#2d3142"/>
+        <rect x="696" y="400" width="224" height="64" rx="6" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text x="710" y="426" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">A linked wiki</text>
+        <text xml:space="preserve" x="710" y="446" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start"><tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">wiki/</tspan> pages that cite the source</text>
+        <text x="40" y="40" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.18em" fill="#bfc0c0" text-anchor="start">LIFE OS · THE WHOLE SYSTEM ON ONE PAGE</text>
+        <text x="40" y="76" font-family="'Instrument Serif', 'Noto Serif', serif" font-size="28" letter-spacing="-0.01em" fill="#f5f5f5">What goes in, what the agent runs, what it writes</text>
+        <rect x="168" y="100" width="28" height="16" rx="2" fill="rgba(245,245,245,0.12)"/>
+        <text x="182" y="111.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f5f5f5" text-anchor="middle">01</text>
+        <text x="206" y="111.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">YOU PUT IN</text>
+        <rect x="432" y="100" width="28" height="16" rx="2" fill="rgba(240,138,89,0.22)"/>
+        <text x="446" y="111.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f08a59" text-anchor="middle">02</text>
+        <text x="470" y="111.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#f08a59" text-anchor="start">THE AGENT RUNS</text>
+        <rect x="696" y="100" width="28" height="16" rx="2" fill="rgba(245,245,245,0.12)"/>
+        <text x="710" y="111.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="600" fill="#f5f5f5" text-anchor="middle">03</text>
+        <text x="734" y="111.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">IT WRITES</text>
+        <text x="40" y="176.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#f5f5f5" text-anchor="start">ONCE, THEN</text>
+        <text x="40" y="189.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#f5f5f5" text-anchor="start">PER PHASE</text>
+        <text x="40" y="267.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#f5f5f5" text-anchor="start">EVERY DAY</text>
+        <text x="40" y="351.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#f5f5f5" text-anchor="start">EVERY WEEK</text>
+        <text x="40" y="435.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.14em" fill="#f5f5f5" text-anchor="start">ON DEMAND</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>The daily loop, and the week around it</title>
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&amp;family=Geist:wght@400;500;600&amp;family=Geist+Mono:wght@400;500;600&amp;display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { background: #2d3142; color: #f5f5f5; font-family: 'Geist', system-ui, sans-serif; }
+    .frame { max-width: 960px; margin: 0 auto; }
+    .diagram-container { width: 100%; overflow-x: auto; }
+    svg { width: 100%; min-width: 960px; display: block; }
+    @media print {
+      .diagram-container { overflow-x: visible; }
+      svg { min-width: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <div class="diagram-container">
+      <svg viewBox="0 0 960 578" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="life-loop-dark-title life-loop-dark-desc">
+        <title id="life-loop-dark-title">The daily loop, and the week around it</title>
+        <desc id="life-loop-dark-desc">/weekly reads the roadmap brief, reviews the last seven days, interviews you and writes the week's blocks. Every day /morning shows the blocks and their minimums and names the day's anchor, the blocks happen or don't, and /evening gives a verdict on the anchor, triages the inbox and plans tomorrow; the next day starts again at /morning. /evening closes one factual entry a day in observation-log.md; an observation becomes a confirmed pattern in patterns.md only on its third repeat, and confirmed patterns shape the next plan.</desc>
+        <defs>
+          <marker id="arrow" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#bfc0c0"/></marker>
+          <marker id="arrow-accent" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#f08a59"/></marker>
+        </defs>
+        <rect width="100%" height="100%" fill="#2d3142"/>
+        <rect x="344" y="204" width="576" height="184" rx="8" fill="rgba(245,245,245,0.025)" stroke="rgba(245,245,245,0.25)" stroke-width="1" stroke-dasharray="4,3"/>
+        <text x="356" y="223" font-family="'Geist Mono', ui-monospace, monospace" font-size="8.5" font-weight="500" letter-spacing="0.14em" fill="#8e98ac" text-anchor="start">EVERY DAY</text>
+        <path d="M 136.0 173 L 136.0 270.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 525 320.0 L 548 320.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 715 320.0 L 738 320.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 822.0 267 L 822 256 Q 822.0 248 814 248 L 450 248 Q 442.0 248 442 256 L 442.0 266" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 233 304.0 L 342 304.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 343 336.0 L 234 336.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 822.0 373 L 822.0 446" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <path d="M 739 480 L 234 480" fill="none" stroke="#f08a59" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow-accent)"/>
+        <path d="M 136.0 447 L 136.0 370.0" fill="none" stroke="#bfc0c0" stroke-width="1" marker-end="url(#arrow)"/>
+        <rect x="144" y="215.5" width="71.4" height="13" rx="2" fill="#2d3142"/>
+        <text x="179.7" y="225" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#8e98ac" text-anchor="middle">READ FIRST</text>
+        <text x="632.0" y="238" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#8e98ac" text-anchor="middle">NEXT DAY</text>
+        <rect x="243.39" y="284.5" width="89.22" height="13" rx="2" fill="#2d3142"/>
+        <text x="288.0" y="294.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#8e98ac" text-anchor="middle">WEEK'S BLOCKS</text>
+        <rect x="240.42" y="343.0" width="95.16" height="13" rx="2" fill="#2d3142"/>
+        <text x="288.0" y="352.5" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#8e98ac" text-anchor="middle">7 DAYS OF DATA</text>
+        <rect x="435.45" y="460.5" width="101.1" height="13" rx="2" fill="#2d3142"/>
+        <text x="486.0" y="470" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#f08a59" text-anchor="middle">3RD REPEAT ONLY</text>
+        <rect x="143.95" y="402.5" width="101.1" height="13" rx="2" fill="#2d3142"/>
+        <text x="194.5" y="412" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" letter-spacing="0.06em" fill="#8e98ac" text-anchor="middle">SHAPES THE PLAN</text>
+        <rect x="40" y="116" width="192" height="56" rx="6" fill="#2d3142"/>
+        <rect x="40" y="116" width="192" height="56" rx="6" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text x="54" y="142" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">roadmap-brief.md</text>
+        <text xml:space="preserve" x="54" y="162" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">priorities, current step</text>
+        <rect x="40" y="272.0" width="192" height="96" rx="6" fill="#2d3142"/>
+        <rect x="40" y="272.0" width="192" height="96" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="54" y="298.0" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/weekly</text>
+        <text xml:space="preserve" x="54" y="318.0" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">retrospective on 7 days,</text>
+        <text xml:space="preserve" x="54" y="334.0" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">an interview with you,</text>
+        <text xml:space="preserve" x="54" y="350.0" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">then the week's blocks</text>
+        <rect x="360" y="268" width="164" height="104" rx="6" fill="#2d3142"/>
+        <rect x="360" y="268" width="164" height="104" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="374" y="294" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/morning</text>
+        <text xml:space="preserve" x="374" y="314" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">blocks and minimums</text>
+        <text xml:space="preserve" x="374" y="330" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">names the day's anchor</text>
+        <text xml:space="preserve" x="374" y="346" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">opens the log entry</text>
+        <rect x="550" y="268" width="164" height="104" rx="6" fill="#2d3142"/>
+        <rect x="550" y="268" width="164" height="104" rx="6" fill="rgba(191,192,192,0.18)" stroke="#8e98ac" stroke-width="1"/>
+        <text x="564" y="294" font-family="'Geist', system-ui, sans-serif" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">Blocks happen</text>
+        <text xml:space="preserve" x="564" y="314" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">or don't</text>
+        <text xml:space="preserve" x="564" y="330" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">new tasks → <tspan font-family="'Geist Mono', ui-monospace, monospace" font-size="9.5" fill="#f5f5f5">INBOX.md</tspan></text>
+        <rect x="740" y="268" width="164" height="104" rx="6" fill="#2d3142"/>
+        <rect x="740" y="268" width="164" height="104" rx="6" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text x="754" y="294" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">/evening</text>
+        <text xml:space="preserve" x="754" y="314" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">verdict on the anchor</text>
+        <text xml:space="preserve" x="754" y="330" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">triages the inbox</text>
+        <text xml:space="preserve" x="754" y="346" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">plans tomorrow</text>
+        <text xml:space="preserve" x="754" y="362" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">closes the log entry</text>
+        <rect x="740" y="448" width="164" height="64" rx="6" fill="#2d3142"/>
+        <rect x="740" y="448" width="164" height="64" rx="6" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text x="754" y="474" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">observation-log.md</text>
+        <text xml:space="preserve" x="754" y="494" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">one factual entry a day</text>
+        <rect x="40" y="448" width="192" height="64" rx="6" fill="#2d3142"/>
+        <rect x="40" y="448" width="192" height="64" rx="6" fill="rgba(240,138,89,0.10)" stroke="#f08a59" stroke-width="1.2"/>
+        <text x="54" y="474" font-family="'Geist Mono', ui-monospace, monospace" font-size="12" font-weight="600" fill="#f5f5f5" text-anchor="start">patterns.md</text>
+        <text xml:space="preserve" x="54" y="494" font-family="'Geist', system-ui, sans-serif" font-size="10.5" fill="#bfc0c0" text-anchor="start">a confirmed pattern</text>
+        <text x="40" y="40" font-family="'Geist Mono', ui-monospace, monospace" font-size="9" font-weight="500" letter-spacing="0.18em" fill="#bfc0c0" text-anchor="start">LIFE/ · ONE DAY ON REPEAT, WITH A WEEKLY REVIEW AROUND IT</text>
+        <text x="40" y="76" font-family="'Instrument Serif', 'Noto Serif', serif" font-size="28" letter-spacing="-0.01em" fill="#f5f5f5">The daily loop, and the week around it</text>
+        <text x="920" y="150" font-family="'Instrument Serif', 'Noto Serif', serif" font-style="italic" font-size="14" fill="#bfc0c0" text-anchor="end">Every block carries a minimum, something you can check when it ends.</text>
+        <line x1="40" y1="538" x2="920" y2="538" stroke="rgba(245,245,245,0.12)" stroke-width="0.8"/>
+        <text x="40" y="556" font-family="'Geist Mono', ui-monospace, monospace" font-size="8" font-weight="500" letter-spacing="0.14em" fill="#bfc0c0" text-anchor="start">LEGEND</text>
+        <rect x="112" y="547" width="16" height="11" rx="2" fill="rgba(191,192,192,0.18)" stroke="#8e98ac" stroke-width="1"/>
+        <text xml:space="preserve" x="136" y="556" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">you</text>
+        <rect x="180.5" y="547" width="16" height="11" rx="2" fill="rgba(245,245,245,0.09)" stroke="rgba(245,245,245,0.75)" stroke-width="1"/>
+        <text xml:space="preserve" x="204.5" y="556" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">a command the agent runs</text>
+        <rect x="364.5" y="547" width="16" height="11" rx="2" fill="rgba(245,245,245,0.025)" stroke="rgba(191,192,192,0.45)" stroke-width="1"/>
+        <text xml:space="preserve" x="388.5" y="556" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">a file it writes</text>
+        <line x1="504.5" y1="552.5" x2="526.5" y2="552.5" stroke="#f08a59" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#arrow-accent)"/>
+        <text xml:space="preserve" x="536.5" y="556" font-family="'Geist', system-ui, sans-serif" font-size="10" fill="#bfc0c0" text-anchor="start">a pattern counts only after three separate days</text>
+      </svg>
+    </div>
+  </div>
+</body>
+</html>
