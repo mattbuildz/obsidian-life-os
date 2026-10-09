@@ -36,9 +36,12 @@ LINE_LIMIT_PROCEDURE = 250
 LINE_LIMIT_INDEX = 300
 CHAR_LIMIT_ENTRY = 150
 KINDS = {"source", "concept", "entity", "procedure", "moc"}
-# System files that live in wiki/ but aren't pages — not subject to the
-# checks (no sources, not in the index, nobody links to them)
+# System files and plugin-generated files (e.g. Excalidraw drawings) that
+# live in wiki/ but aren't pages — not subject to the checks (no sources,
+# not in the index, nobody links to them)
 SYSTEM_KINDS = {"catalog", "hot", "schema"}
+NON_PAGE_SUFFIXES = (".excalidraw.md", ".kanban.md")
+NON_PAGE_FM_KEYS = {"excalidraw-plugin", "kanban-plugin"}
 STATUSES = {"draft", "active", "stale", "disputed", "archived"}
 # A MOC ends with a fixed tail: gaps -> related -> sources. A link to a page
 # from the FOLDER has to appear BEFORE the tail, i.e. in some content section.
@@ -124,11 +127,30 @@ class Page:
         return {m.group(1).strip() for m in WIKILINK.finditer(self.body)}
 
 
+def is_page(path, fm):
+    """True if a markdown file in wiki/ is an actual wiki page.
+
+    System files opt out via `kind:` in frontmatter; plugin-generated files
+    (e.g. Excalidraw drawings) don't declare a `kind`, so they are recognized
+    by their compound filename suffix (`.excalidraw.md`) or plugin frontmatter.
+    """
+    if path.name.lower().endswith(NON_PAGE_SUFFIXES):
+        return False
+    if fm.get("kind", "") in SYSTEM_KINDS:
+        return False
+    if NON_PAGE_FM_KEYS & fm.keys() or any(k.endswith("-plugin") for k in fm):
+        return False
+    tags = fm.get("tags", [])
+    if "excalidraw" in (tags if isinstance(tags, list) else [tags]):
+        return False
+    return True
+
+
 def load_pages():
     if not WIKI.exists():
         return []
     all_pages = [Page(p) for p in sorted(WIKI.rglob("*.md"))]
-    return [p for p in all_pages if p.kind not in SYSTEM_KINDS]
+    return [p for p in all_pages if is_page(p.path, p.fm)]
 
 
 # --------------------------------------------------------------------------
@@ -146,10 +168,15 @@ def check(pages, fix):
     # 1. dead wikilinks (only within the wiki — links to the rest of the vault are skipped)
     for p in pages:
         for link in p.outgoing_links():
-            if link not in targets and not (VAULT / f"{link}.md").exists():
-                hits = list(VAULT.rglob(f"{link}.md"))
-                if not hits:
-                    problems["1. Dead wikilinks"].append(f"{p.rel} → [[{link}]]")
+            if link in targets:
+                continue
+            candidates = (
+                [link]
+                if link.endswith(".md")
+                else [f"{link}.md", *(f"{link}{s}" for s in NON_PAGE_SUFFIXES)]
+            )
+            if not any((VAULT / c).exists() or list(VAULT.rglob(c)) for c in candidates):
+                problems["1. Dead wikilinks"].append(f"{p.rel} → [[{link}]]")
 
     # 2. wiki <-> INDEX.md drift
     index_entries = set()

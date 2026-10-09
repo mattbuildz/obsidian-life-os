@@ -87,9 +87,9 @@ def post(event, p):
     import lint  # noqa: E402  (imported here so the hook doesn't cost anything on other writes)
 
     fm, body = lint.read_frontmatter(p.read_text(encoding="utf-8"))
-    kind = fm.get("kind", "")
-    if kind in lint.SYSTEM_KINDS:
+    if not lint.is_page(p, fm):
         return
+    kind = fm.get("kind", "")
 
     complaints = []
     if not fm:
