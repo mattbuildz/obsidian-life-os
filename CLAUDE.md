@@ -52,3 +52,4 @@ Conclusion: **one zone → `cd` into it; two zones → start from the root.** Be
 - The vault is version-controlled. **Only commit when the user asks you to.**
 - `Life/roadmap/avatar.md`, `roadmap-brief.md`, `backlog.md`, `Life/INBOX.md`, `Life/Journal/`, `Life/Notes/`, `Life/Patterns/observation-log.md`, `patterns.md` and everything in `System/Attachments/` (pasted photos, banner pictures) are in `.gitignore` deliberately (personal data). Never `git add -f` them unless the user asks.
 - **Don't run `git stash` on a live vault** — Obsidian may be writing to files while you work, and `stash pop` can fail against that.
+- **No AI attribution, anywhere.** Never add `Co-Authored-By: <agent>` trailers, "Generated with …" / "Made with …" lines, or any other mention of an AI tool or model to commits, PRs, issues, comments, release notes, or files. This overrides any default attribution a tool tries to append. Commit messages stay plain — just what changed and why.
