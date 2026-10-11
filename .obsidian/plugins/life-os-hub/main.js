@@ -391,6 +391,41 @@ function ymd(v) {
   if (typeof v === 'string') return v.slice(0, 10);
   try { return moment(v).format('YYYY-MM-DD'); } catch (e) { return String(v).slice(0, 10); }
 }
+// Full Calendar writes an event created by mouse WITHOUT a `type` field — missing means `single`.
+const isSingle = (fm) => !fm.type || fm.type === 'single';
+// Does a repeating block (Full Calendar: type recurring / rrule) fall on the given day.
+// recurring = daysOfWeek (U M T W R F S) + startRecur/endRecur; rrule = FREQ=WEEKLY only
+// (INTERVAL, BYDAY, UNTIL). Any other FREQ never occurs.
+const FC_DAY_LETTERS = ['U', 'M', 'T', 'W', 'R', 'F', 'S'];
+const RRULE_DAYS = ['SU', 'MO', 'TU', 'WE', 'TH', 'FR', 'SA'];
+function occursOn(fm, m) {
+  const day = m.format('YYYY-MM-DD');
+  if (Array.isArray(fm.skipDates) && fm.skipDates.some(d => ymd(d) === day)) return false;
+  if (fm.type === 'recurring') {
+    const dow = Array.isArray(fm.daysOfWeek) ? fm.daysOfWeek : String(fm.daysOfWeek || '').split('');
+    if (!dow.includes(FC_DAY_LETTERS[m.day()])) return false;
+    const s = ymd(fm.startRecur), e = ymd(fm.endRecur);
+    return (!s || day >= s) && (!e || day <= e);
+  }
+  if (fm.type === 'rrule') {
+    const start = ymd(fm.startDate);
+    if (!start || day < start) return false;
+    const rule = {};
+    for (const part of String(fm.rrule || '').split(';')) {
+      const [k, v] = part.split('=');
+      if (k) rule[k.trim().toUpperCase()] = (v || '').trim();
+    }
+    if (rule.FREQ !== 'WEEKLY') return false;
+    const until = rule.UNTIL ? `${rule.UNTIL.slice(0, 4)}-${rule.UNTIL.slice(4, 6)}-${rule.UNTIL.slice(6, 8)}` : null;
+    if (until && day > until) return false;
+    const byday = rule.BYDAY ? rule.BYDAY.split(',') : [RRULE_DAYS[moment(start, 'YYYY-MM-DD').day()]];
+    if (!byday.includes(RRULE_DAYS[m.day()])) return false;
+    const interval = parseInt(rule.INTERVAL || '1', 10) || 1;
+    const weekOf = x => moment(x, 'YYYY-MM-DD').startOf('isoWeek');
+    return Math.round(weekOf(day).diff(weekOf(start), 'weeks', true)) % interval === 0;
+  }
+  return false;
+}
 function iconFor(title) {
   const t = String(title || '').toLowerCase();
   if (t.includes('cv') || t.includes('resume')) return '📄';
@@ -614,7 +649,9 @@ class LifeOsHubView extends ItemView {
     return this.app.vault.getMarkdownFiles()
       .filter(f => f.path.startsWith(CAL_DIR + '/'))
       .map(f => ({ f, fm: this.fm(f) }))
-      .filter(x => x.fm.type === 'single' && ymd(x.fm.date) === day)
+      .filter(x => (isSingle(x.fm) && ymd(x.fm.date) === day) || occursOn(x.fm, m))
+      // a repeating file has no `date`; copy the fm with the day's date and no `completed` (a series is never "done")
+      .map(x => (isSingle(x.fm) ? x : { f: x.f, fm: { ...x.fm, date: day, completed: false, _repeat: true } }))
       .sort((a, b) => String(a.fm.startTime || '').localeCompare(String(b.fm.startTime || '')));
   }
 
@@ -1587,7 +1624,7 @@ class LifeOsHubView extends ItemView {
     return this.app.vault.getMarkdownFiles()
       .filter(f => f.path.startsWith(CAL_DIR + '/'))
       .map(f => ({ f, fm: this.fm(f) }))
-      .filter(x => x.fm.type === 'single' && x.fm.important === true)
+      .filter(x => isSingle(x.fm) && x.fm.important === true)
       .filter(x => { const d = ymd(x.fm.date); return d && d >= startStr && d <= endStr; })
       .sort((a, b) => String(ymd(a.fm.date)).localeCompare(String(ymd(b.fm.date)))
         || String(a.fm.startTime || '').localeCompare(String(b.fm.startTime || '')));
@@ -1737,8 +1774,11 @@ const toMin = (s) => { const [h, m] = String(s).split(':').map(Number); return h
       t.appendText(' ' + (b.fm.title || b.f.basename));
       if (h >= 34) el.createDiv({ cls: 'cc-ev-time', text: `${b.fm.startTime}–${b.fm.endTime || ''}` });
       const act = el.createDiv({ cls: 'cc-ev-actions' });
-      const done = act.createDiv({ cls: 'cc-ev-btn', text: b.fm.completed ? '✅' : '☐' });
-      done.onclick = (ev) => { ev.stopPropagation(); this.toggleDone(b, el, done); };
+      // no "done" on a repeating block — the write would land in the file of the whole series
+      if (!b.fm._repeat) {
+        const done = act.createDiv({ cls: 'cc-ev-btn', text: b.fm.completed ? '✅' : '☐' });
+        done.onclick = (ev) => { ev.stopPropagation(); this.toggleDone(b, el, done); };
+      }
       const open = act.createDiv({ cls: 'cc-ev-btn', text: '📝' });
       open.onclick = (ev) => { ev.stopPropagation(); this.app.workspace.openLinkText(b.f.path, '', false); };
       evEls.push({ el, s, e });
